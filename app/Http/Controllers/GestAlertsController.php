@@ -17,7 +17,7 @@ class GestAlertsController extends Controller
         $estados = EstadoModel::all();
         $especialidades = EspecialidadModel::all();
 
-        return view('gest_alerts', [
+        return view('alerts', [
             'alerts' => $alerts,
             'especialidades' => $especialidades,
             'estados' => $estados

@@ -48,14 +48,14 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center hu_icon" style="margin-top: -1%">
-                    <a href="{{ route('gest.alerts') }}">
+                    <a href="{{ route('alerts') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('gest.alerts')" :active="request()->routeIs('gest.alerts')">
+                    <x-nav-link :href="route('alerts')" :active="request()->routeIs('alerts')">
                         {{ __('Alertas') }}
                     </x-nav-link>
                 </div>
@@ -124,7 +124,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('gest.alerts')" :active="request()->routeIs('gest.alerts')">
+            <x-responsive-nav-link :href="route('alerts')" :active="request()->routeIs('alerts')">
                 {{ __('Alertas') }}
             </x-responsive-nav-link>
         </div>

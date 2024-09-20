@@ -20,9 +20,11 @@ class AlertModel extends Model
         'fecha_objetivo',
         'created_at',
         'created_by',
-        'estado_id',
         'is_in_alephoo',
+        'updated_at',
         'tipo_id',
-        'frecuencia'
+        'frecuencia',
+        'tipo_frecuencia',
+        'updated_by'
     ];
 }

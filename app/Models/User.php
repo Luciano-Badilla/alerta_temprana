@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'rol',
+        'especialidad_id',
         'pass_changed'
     ];
 
@@ -48,8 +48,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function rol()
+    public function especialidad()
     {
-        return $this->belongsTo(RolModel::class, 'rol_id');
+        return $this->belongsTo(EspecialidadModel::class, 'especialidad_id');
     }
 }

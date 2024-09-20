@@ -1,3 +1,32 @@
+@php
+    use App\Models\EspecialidadModel;
+    $especialidades = EspecialidadModel::all();
+    $especialidadPrincipal = Auth::user()->especialidad_id;
+@endphp
+
+<style>
+    /* Ajusta la altura y el tamaño del contenedor de Select2 */
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+        /* Ajusta según tus necesidades */
+        line-height: 36px !important;
+    }
+
+    .select2-container .select2-selection--multiple {
+        min-height: 38px !important;
+        /* Para selects múltiples */
+    }
+
+    .select2-container {
+        font-size: 16px !important;
+    }
+</style>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+</head>
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
@@ -21,15 +50,15 @@
             <x-input-label for="name" :value="__('Nombre y Apellido')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
                 required autofocus autocomplete="name" readonly />
-                <p class="mt-1 text-sm text-gray-600">
-                    {{ __('Para cambiar el Nombre y Apellido comuniquese con un administrador con el motivo.') }}
-                </p>
+            <p class="mt-1 text-sm text-gray-600">
+                {{ __('Para cambiar el Nombre y Apellido comuniquese con un administrador con el motivo.') }}
+            </p>
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
             <x-input-label for="email" :value="__('Usuario')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)"
+            <x-text-input id="email" name="email" type="text" class="mt-1 block w-full" :value="old('email', $user->email)"
                 required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
@@ -52,6 +81,15 @@
                 </div>
             @endif
         </div>
+        <div>
+            <x-input-label for="especialidad" :value="__('Especialidad')" />
+            <select type="text" class="form-select" id="editEspecialidad" name="editEspecialidad" required>
+                @foreach ($especialidades as $especialidad)
+                    <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Guardar') }}</x-primary-button>
@@ -63,3 +101,17 @@
         </div>
     </form>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#editEspecialidad').val("{{ $especialidadPrincipal }}");
+        $('#editEspecialidad').select2({
+            placeholder: 'Seleccione una especialidad',
+            allowClear: true
+        });
+    });
+</script>

@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', [GestAlertsController::class, 'index'])
     ->middleware(['auth', 'verified'])
-    ->name('gest.alerts');
+    ->name('alerts');
 
-Route::get('/gest_alerts', [GestAlertsController::class, 'index'])
+Route::get('/alerts', [GestAlertsController::class, 'index'])
     ->middleware(['auth', 'verified'])
-    ->name('gest.alerts');
+    ->name('alerts');
 
 // routes/web.php
 Route::post('/get-personal-data', [AlertController::class, 'getPersonalDataByDNI'])->name('get_data');
@@ -26,17 +26,34 @@ Route::get('', function () {
     return view('auth/login');
 })->name('profile_view');
 
-Route::get('/gest_alerts/create_alert', [AlertController::class, 'index'])
+Route::get('/alerts/create_alert', [AlertController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('alert.create');
 
-Route::post('/gest_alerts/create_alert', [AlertController::class, 'store'])
+Route::post('/alerts/create_alert', [AlertController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('alert.store');
 
-Route::post('/gest_alerts/create_alert2', [AlertController::class, 'store2'])
+Route::post('/alerts/create_alert2', [AlertController::class, 'store2'])
     ->middleware(['auth', 'verified'])
     ->name('alert.store2');
+
+Route::get('/alerts/edit_alert/{id}', [AlertController::class, 'edit_index'])
+    ->middleware(['auth', 'verified'])
+    ->name('alert.edit');
+
+Route::post('/alerts/edit_store_alert', [AlertController::class, 'edit'])
+    ->middleware(['auth', 'verified'])
+    ->name('alert.edit_store');
+
+Route::get('/alerts/gest_alert/{id}', [AlertController::class, 'gest_index'])
+    ->middleware(['auth', 'verified'])
+    ->name('alert.gest');
+
+
+Route::post('/estado/agregar', [AlertController::class, 'agregarEstado'])->name('estado.agregar');
+Route::post('/estado/eliminar', [AlertController::class, 'eliminarEstado'])->name('estado.eliminar');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

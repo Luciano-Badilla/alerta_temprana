@@ -17,7 +17,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        log::info("Test");
         return view('auth.login');
     }
 
@@ -30,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('gest.alerts'));
+        return redirect()->intended(route('alerts'));
     }
 
     /**

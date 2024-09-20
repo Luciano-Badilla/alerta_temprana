@@ -45,6 +45,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('gest.alerts', absolute: false));
+        return redirect(route('alerts', absolute: false));
     }
 }

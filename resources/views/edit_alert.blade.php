@@ -1,3 +1,13 @@
+@php
+    use App\Models\PersonaAlephooModel;
+    use App\Models\PersonaLocalModel;
+    use App\Models\EstadoModel;
+    use App\Models\DatoPersonaModel;
+    use App\Models\EspecialidadModel;
+    use App\Models\TipoModel;
+    use Carbon\Carbon;
+@endphp
+
 <style>
     .container {
         padding: 1%;
@@ -111,7 +121,6 @@
 </style>
 
 <x-app-layout>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
@@ -132,7 +141,8 @@
                     en
                     la base de datos local.
                 </div>
-                <form id="outer-form" action="{{ route('alert.store') }}" method="POST">
+
+                <form id="outer-form" action="{{ route('alert.edit_store') }}" method="POST">
                     @csrf
                     <div class="container">
                         <div class="form-section">
@@ -140,11 +150,14 @@
                                 style="font-size: 20px"><b>Paciente:</b></label>
                             <div class="input-group">
                                 <div>
-                                    <input type="hidden" id="addId" name="addId" required>
-                                    <label for="addDNI" class="form-label">DNI:</label>
+                                    <input type="hidden" id="editAlertId" name="editAlertId"
+                                        value="{{ $alert->id }}" required>
+                                    <input type="hidden" id="editId" name="editId" value="{{ $alert->persona_id }}"
+                                        required>
+                                    <label for="editDNI" class="form-label">DNI:</label>
                                     <div class="input-wrapper">
-                                        <input type="text" class="form-control" id="addDNI" name="addDNI"
-                                            placeholder="Numero de DNI" required>
+                                        <input type="text" class="form-control" id="editDNI" name="editDNI"
+                                            value="{{ $persona->documento }}" placeholder="Numero de DNI" required>
                                         <button type="button" class="btn btn-dark" id="searchByDni">
                                             <i id="search_icon" class="fa-solid fa-magnifying-glass"
                                                 style="display: block"></i>
@@ -158,37 +171,49 @@
                                 </div>
 
                                 <div>
-                                    <label for="addApellido" class="form-label">Apellido/s:</label>
-                                    <input type="text" class="form-control" id="addApellido" name="addApellido"
-                                        placeholder="Apellido/s" readonly>
+                                    <label for="editApellido" class="form-label">Apellido/s:</label>
+                                    <input type="text" class="form-control" id="editApellido" name="editApellido"
+                                        value="{{ $persona->apellidos }}" placeholder="Apellido/s" readonly>
                                     <div id="input1_not_found" class="error-message">Apellido no encontrado.</div>
                                     <div id="input1_1_not_found" class="error-message">Puede que el apellido este
                                         desactualizado.</div>
                                 </div>
 
                                 <div>
-                                    <label for="addNombre" class="form-label">Nombre/s:</label>
-                                    <input type="text" class="form-control" id="addNombre" name="addNombre"
-                                        placeholder="Nombre/s" readonly>
+                                    <label for="editNombre" class="form-label">Nombre/s:</label>
+                                    <input type="text" class="form-control" id="editNombre" name="editNombre"
+                                        value="{{ $persona->nombres }}" placeholder="Nombre/s" readonly>
                                     <div id="input2_not_found" class="error-message">Nombre no encontrado.</div>
                                     <div id="input2_2_not_found" class="error-message">Puede que el nombre este
                                         desactualizado.</div>
                                 </div>
 
                                 <div>
-                                    <label for="addFechaNac" class="form-label">Fecha de nacimiento:</label>
-                                    <input type="date" class="form-control" id="addFechaNac" name="addFechaNac"
+                                    <label for="editFechaNac" class="form-label">Fecha de nacimiento:</label>
+                                    <input type="date" class="form-control" id="editFechaNac" name="editFechaNac"
+                                        value="{{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('Y-m-d') }}"
                                         placeholder="Fecha de nacimiento" readonly>
+
                                     <div id="input3_not_found" class="error-message">Fecha de nacimiento no encontrada.
                                     </div>
                                     <div id="input3_3_not_found" class="error-message">Puede que la fecha de nacimiento
                                         este desactualizada.
                                     </div>
                                 </div>
-
+                                @php
+                                    $celularLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'celular')
+                                            ->first()->dato ?? null;
+                                    $emailLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'email')
+                                            ->first()->dato ?? null;
+                                @endphp
                                 <div>
-                                    <label for="addCelular" class="form-label">Celular:</label>
-                                    <input type="text" class="form-control" id="addCelular" name="addCelular"
+                                    <label for="editCelular" class="form-label">Celular:</label>
+                                    <input type="text" class="form-control" id="editCelular" name="editCelular"
+                                        value="{{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'Celular no encontrado' }}"
                                         placeholder="Celular">
                                     <div id="input4_not_found" class="error-message">Número de celular no encontrado.
                                     </div>
@@ -198,15 +223,17 @@
                                 </div>
 
                                 <div>
-                                    <label for="addEmail" class="form-label">Email:</label>
-                                    <input type="email" class="form-control" id="addEmail" name="addEmail"
+                                    <label for="editEmail" class="form-label">Email:</label>
+                                    <input type="email" class="form-control" id="editEmail" name="editEmail"
+                                        value="{{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'Email no encontrado' }}"
                                         placeholder="Email">
                                     <div id="input5_not_found" class="error-message">Email no encontrado.</div>
                                 </div>
                                 <div id="input5_5_not_found" class="error-message">Puede que el email este
                                     desactualizado.</div>
 
-                                <input type="hidden" id="is_in_alephoo" name="is_in_alephoo" required>
+                                <input type="hidden" id="is_in_alephoo" name="is_in_alephoo"
+                                    value="{{ $alert->is_in_alephoo }}" required>
                             </div>
                         </div>
 
@@ -216,9 +243,9 @@
                                     alerta:</b></label>
                             <div class="input-group">
                                 <div>
-                                    <label for="addEspecialidad" class="form-label">Especialidad:</label>
-                                    <select type="text" class="form-control" id="addEspecialidad"
-                                        name="addEspecialidad" required>
+                                    <label for="editEspecialidad" class="form-label">Especialidad:</label>
+                                    <select type="text" class="form-control" id="editEspecialidad"
+                                        name="editEspecialidad" required>
                                         <option value="">Seleccione una especialidad</option>
                                         @foreach ($especialidades as $especialidad)
                                             <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
@@ -228,16 +255,26 @@
                                 </div>
 
                                 <div>
-                                    <label for="addDetalle" class="form-label">Detalle:</label>
-                                    <textarea class="form-control" id="addDetalle" name="addDetalle" placeholder="Detalle"
+                                    <label for="editDetalle" class="form-label">Detalle:</label>
+                                    <textarea class="form-control" id="editDetalle" name="editDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
-                                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required></textarea>
+                                        oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required>{{ $alert->detalle }}</textarea>
                                 </div>
 
 
                                 <div class="p-2">
-                                    <label for="addFechaAlert" class="form-label">Fecha de la alerta: (dentro
+                                    <div class="flex gap-2">
+                                        <p><strong>Fecha de creación:</strong>
+                                            {{ ucfirst(\Carbon\Carbon::parse($alert->created_at)->locale('es')->translatedFormat('F Y')) }}
+                                        <p><strong>Fecha de la alerta:</strong>
+                                            {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
+                                    </div>
+                                    <p class="alert alert-danger">Al editar la fecha de la alerta se contara desde la
+                                        fecha de creacion.</p>
+                                    <label for="editFechaAlert" class="form-label">Fecha de la alerta: (dentro
                                         de...)</label>
+
+
 
                                     <div class="radio-container ml-1">
                                         <div class="form-check radio-item">
@@ -305,11 +342,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                
 
 
                             </div>
                             <div style="text-align: right;">
-                                <button type="submit" class="btn btn-dark">Agendar alerta</button>
+                                <button type="submit" class="btn btn-dark">Editar alerta</button>
                             </div>
 
                         </div>
@@ -331,6 +369,40 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
+    tipo = "{{ $alert->tipo_id }}";
+    tipo_frecuencia = "{{ $alert->tipo_frecuencia }}";
+    frecuencia = "{{ $alert->frecuencia }}";
+    $('#editEspecialidad').val("{{ $alert->especialidad_id }}");
+    $('#editEspecialidad').select2();
+    if (frecuencia == 6 && tipo_frecuencia == 'meses') {
+        $('#6meses').prop('checked', true);
+    } else if (frecuencia == 1 && tipo_frecuencia == 'anios') {
+        $('#1anio').prop('checked', true);
+    } else if (frecuencia == 2 && tipo_frecuencia == 'anios') {
+        $('#2anios').prop('checked', true);
+    } else if (frecuencia == 5 && tipo_frecuencia == 'anios') {
+        $('#5anios').prop('checked', true);
+    } else {
+        $('#personalizado').prop('checked', true).trigger('change');
+        const personalizadoInput = document.getElementById('personalizadoMeses');
+        personalizadoInput.style.display = 'block';
+
+        $('#numPersonalizado').val(frecuencia);
+
+        if (tipo_frecuencia == 'meses') {
+            $('#meses').prop('checked', true);
+        } else {
+            $('#anios').prop('checked', true);
+        }
+
+
+    }
+
+    if (tipo == 1) {
+        $('#una_sola_vez').prop('checked', true);
+    } else {
+        $('#siempre').prop('checked', true);
+    }
     document.querySelectorAll('input[name="fecha_alert"]').forEach((radio) => {
         radio.addEventListener('change', function() {
             const personalizadoInput = document.getElementById('personalizadoMeses');
@@ -344,7 +416,7 @@
         });
     });
 
-    document.getElementById('addDNI').addEventListener('keydown', function(event) {
+    document.getElementById('editDNI').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             // Evita que el formulario se envíe
             event.preventDefault();
@@ -355,9 +427,6 @@
 
 
     $(document).ready(function() {
-
-        $('#addEspecialidad').val("{{ $especialidadPrincipal }}");
-        $('#addEspecialidad').select2();
 
         // Ajuste de altura después de un pequeño retraso
         setTimeout(function() {
@@ -398,12 +467,13 @@
             });
         });
 
+
         $('#searchByDni').on('click', function() {
 
             $('#search_icon').css('display', 'none');
             $('#loading_icon').css('display', 'block');
 
-            var dni = $('#addDNI').val();
+            var dni = $('#editDNI').val();
 
             var Url = '{{ route('get_data') }}';
 
@@ -416,12 +486,12 @@
                 },
                 success: function(response) {
                     var data = response.original;
-                    $('#addNombre').val(null);
-                    $('#addApellido').val(null);
-                    $('#addFechaNac').val(null);
-                    $('#addCelular').val(null);
-                    $('#addEmail').val(null);
-                    $('#addId').val(null);
+                    $('#editNombre').val(null);
+                    $('#editApellido').val(null);
+                    $('#editFechaNac').val(null);
+                    $('#editCelular').val(null);
+                    $('#editEmail').val(null);
+                    $('#editId').val(null);
                     $('#input1_1_not_found').css('display', 'none');
                     $('#input2_2_not_found').css('display', 'none');
                     $('#input3_3_not_found').css('display', 'none');
@@ -436,66 +506,68 @@
                         $('#is_in_alephoo').val("1");
 
                         if (data.id) {
-                            $('#addId').val(data.id);
+                            $('#editId').val(data.id);
                         }
                         if (data.nombres) {
-                            $('#addNombre').val(data.nombres);
-                            $('#addNombre').attr("readonly", true);
-                            $('#addNombre').attr("required", false);
+                            $('#editNombre').val(data.nombres);
+                            $('#editNombre').attr("readonly", true);
+                            $('#editNombre').attr("required", false);
                             $('#input1_not_found').css('display', 'none');
                         } else {
-                            $('#addNombre').removeAttr("readonly");
-                            $('#addNombre').attr("required", true);
+                            $('#editNombre').removeAttr("readonly");
+                            $('#editNombre').attr("required", true);
                             $('#input1_not_found').css('display', 'block');
                         }
                         if (data.apellidos) {
-                            $('#addApellido').val(data.apellidos);
-                            $('#addApellido').attr("readonly", true);
-                            $('#addApellido').attr("required", false);
+                            $('#editApellido').val(data.apellidos);
+                            $('#editApellido').attr("readonly", true);
+                            $('#editApellido').attr("required", false);
                             $('#input2_not_found').css('display', 'none');
 
                         } else {
-                            $('#addApellido').removeAttr("readonly");
-                            $('#addApellido').attr("required", true);
+                            $('#editApellido').removeAttr("readonly");
+                            $('#editApellido').attr("required", true);
                             $('#input2_not_found').css('display', 'block');
                         }
                         if (data.fecha_nacimiento) {
-                            $('#addFechaNac').val(data.fecha_nacimiento);
-                            $('#addFechaNac').attr("readonly", true);
-                            $('#addFechaNac').attr("required", false);
+                            $('#editFechaNac').val(data.fecha_nacimiento);
+                            $('#editFechaNac').attr("readonly", true);
+                            $('#editFechaNac').attr("required", false);
                             $('#input3_not_found').css('display', 'none');
                         } else {
-                            $('#addFechaNac').removeAttr("readonly");
-                            $('#addFechaNac').attr("required", true);
+                            $('#editFechaNac').removeAttr("readonly");
+                            $('#editFechaNac').attr("required", true);
                             $('#input3_not_found').css('display', 'block');
                         }
                         if (data.celular != '+') {
-                            $('#addCelular').val(data.celular);
-                            $('#addCelular').attr("required", false);
+                            $('#editCelular').val(data.celular);
+                            $('#editCelular').attr("required", false);
                             $('#input4_not_found').css('display', 'none');
                         } else {
-                            $('#addCelular').attr("required", true);
+                            $('#editCelular').attr("required", true);
                             $('#input4_not_found').css('display', 'block');
                         }
                         if (data.email) {
-                            $('#addEmail').val(data.email || '');
-                            $('#addEmail').attr("required", false);
+                            $('#editEmail').val(data.email || '');
+                            $('#editEmail').attr("required", false);
                             $('#input5_not_found').css('display', 'none');
                         } else {
-                            $('#addEmail').attr("required", true);
+                            $('#editEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
                         }
 
-                        if ($('#addNombre').val() == "" || $('#addApellido').val() == "" ||
-                            $('#addFechaNac').val() == "" || $('#addCelular').val() == "" ||
-                            $('#addEmail').val() == "") {
+                        if ($('#editNombre').val() == "" || $('#editApellido').val() ==
+                            "" ||
+                            $('#editFechaNac').val() == "" || $('#editCelular').val() ==
+                            "" ||
+                            $('#editEmail').val() == "") {
                             $('#alert3_paciente').css('display', 'block');
                         }
                         searchLocalDataEmptyInputs()
                     } else {
-                        $('#addNombre').removeAttr("readonly");
-                        $('#addApellido').removeAttr("readonly");
-                        $('#addFechaNac').removeAttr("readonly");
+                        $('#editNombre').removeAttr("readonly");
+                        $('#editApellido').removeAttr("readonly");
+                        $('#editFechaNac').removeAttr("readonly");
                         $('#is_in_alephoo').val("0");
                         searchLocalData();
                     }
@@ -513,7 +585,7 @@
         });
 
         function searchLocalData() {
-            var dni = $('#addDNI').val();
+            var dni = $('#editDNI').val();
 
             var Url = '{{ route('get_data_local') }}';
 
@@ -526,12 +598,12 @@
                 },
                 success: function(response) {
                     var data = response.original;
-                    $('#addNombre').val(null);
-                    $('#addApellido').val(null);
-                    $('#addFechaNac').val(null);
-                    $('#addCelular').val(null);
-                    $('#addEmail').val(null);
-                    $('#addId').val(null);
+                    $('#editNombre').val(null);
+                    $('#editApellido').val(null);
+                    $('#editFechaNac').val(null);
+                    $('#editCelular').val(null);
+                    $('#editEmail').val(null);
+                    $('#editId').val(null);
                     $('#alert2_paciente').css('display', 'none')
                     if (data.nombres || data.apellidos || data.fecha_nacimiento || data
                         .email || !data.celular === '+' || data.id) {
@@ -542,58 +614,58 @@
                         $('#is_in_alephoo').val("0");
 
                         if (data.id) {
-                            $('#addId').val(data.id);
+                            $('#editId').val(data.id);
                             $('#alert2_paciente').css('display', 'block')
                         }
                         if (data.nombres) {
-                            $('#addNombre').val(data.nombres);
-                            $('#addNombre').attr("required", true);
+                            $('#editNombre').val(data.nombres);
+                            $('#editNombre').attr("required", true);
                             $('#input1_not_found').css('display', 'none');
                         } else {
-                            $('#addNombre').removeAttr("readonly");
-                            $('#addNombre').attr("required", true);
+                            $('#editNombre').removeAttr("readonly");
+                            $('#editNombre').attr("required", true);
                             $('#input1_not_found').css('display', 'block');
                         }
                         if (data.apellidos) {
-                            $('#addApellido').val(data.apellidos);
-                            $('#addApellido').attr("required", true);
+                            $('#editApellido').val(data.apellidos);
+                            $('#editApellido').attr("required", true);
                             $('#input2_not_found').css('display', 'none');
 
                         } else {
-                            $('#addApellido').removeAttr("readonly");
-                            $('#addApellido').attr("required", true);
+                            $('#editApellido').removeAttr("readonly");
+                            $('#editApellido').attr("required", true);
                             $('#input2_not_found').css('display', 'block');
                         }
                         if (data.fecha_nacimiento) {
-                            $('#addFechaNac').val(data.fecha_nacimiento);
-                            $('#addFechaNac').attr("required", true);
+                            $('#editFechaNac').val(data.fecha_nacimiento);
+                            $('#editFechaNac').attr("required", true);
                             $('#input3_not_found').css('display', 'none');
                         } else {
-                            $('#addFechaNac').removeAttr("readonly");
-                            $('#addFechaNac').attr("required", true);
+                            $('#editFechaNac').removeAttr("readonly");
+                            $('#editFechaNac').attr("required", true);
                             $('#input3_not_found').css('display', 'block');
                         }
                         if (data.celular != '+') {
-                            $('#addCelular').val(data.celular);
-                            $('#addCelular').attr("required", true);
+                            $('#editCelular').val(data.celular);
+                            $('#editCelular').attr("required", true);
                             $('#input4_not_found').css('display', 'none');
                         } else {
-                            $('#addCelular').attr("required", true);
+                            $('#editCelular').attr("required", true);
                             $('#input4_not_found').css('display', 'block');
                         }
                         if (data.email) {
-                            $('#addEmail').val(data.email || '');
-                            $('#addEmail').attr("required", true);
+                            $('#editEmail').val(data.email || '');
+                            $('#editEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'none');
                         } else {
-                            $('#addEmail').attr("required", true);
+                            $('#editEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
                         }
                     } else {
                         $('#alert_paciente').css('display', 'block')
-                        $('#addNombre').removeAttr("readonly");
-                        $('#addApellido').removeAttr("readonly");
-                        $('#addFechaNac').removeAttr("readonly");
+                        $('#editNombre').removeAttr("readonly");
+                        $('#editApellido').removeAttr("readonly");
+                        $('#editFechaNac').removeAttr("readonly");
                         $('#is_in_alephoo').val("0");
                     }
 
@@ -613,8 +685,8 @@
 
         function searchLocalDataEmptyInputs() {
 
-            var dni = $('#addDNI').val();
-            var id = $('#addId').val();
+            var dni = $('#editDNI').val();
+            var id = $('#editId').val();
 
             var Url = '{{ route('get_data_local_empty_inputs') }}';
 
@@ -638,38 +710,38 @@
                             $('#alert3_paciente').css('display', 'none')
                             $('#alert4_paciente').css('display', 'none')
                             $('#alert4_paciente').css('display', 'block');
-                            if (data.dato && data.tipo_dato == 'nombre' && $('#addNombre')
+                            if (data.dato && data.tipo_dato == 'nombre' && $('#editNombre')
                                 .val() == "") {
-                                $('#addNombre').val(data.dato);
-                                $('#addNombre').attr("required", true);
+                                $('#editNombre').val(data.dato);
+                                $('#editNombre').attr("required", true);
                                 $('#input1_not_found').css('display', 'none');
                                 $('#input1_1_not_found').css('display', 'block');
                             }
                             if (data.dato && data.tipo_dato == 'apellido' && $(
-                                    '#addApellido').val() == "") {
-                                $('#addApellido').val(data.dato);
-                                $('#addApellido').attr("required", true);
+                                    '#editApellido').val() == "") {
+                                $('#editApellido').val(data.dato);
+                                $('#editApellido').attr("required", true);
                                 $('#input2_not_found').css('display', 'none');
                                 $('#input2_2_not_found').css('display', 'block');
                             }
                             if (data.dato && data.tipo_dato == 'fecha_nac' && $(
-                                    '#addFechaNac').val() == "") {
-                                $('#addFechaNac').val(data.dato);
-                                $('#addFechaNac').attr("required", true);
+                                    '#editFechaNac').val() == "") {
+                                $('#editFechaNac').val(data.dato);
+                                $('#editFechaNac').attr("required", true);
                                 $('#input3_not_found').css('display', 'none');
                                 $('#input3_3_not_found').css('display', 'block');
                             }
                             if (data.dato && data.tipo_dato == 'celular' && data.celular !==
                                 '+') {
-                                $('#addCelular').val(data.dato);
-                                $('#addCelular').attr("required", true);
+                                $('#editCelular').val(data.dato);
+                                $('#editCelular').attr("required", true);
                                 $('#input4_not_found').css('display', 'none');
                                 $('#input4_4_not_found').css('display', 'block');
                             }
-                            if (data.dato && data.tipo_dato == 'email' && $('#addEmail')
+                            if (data.dato && data.tipo_dato == 'email' && $('#editEmail')
                                 .val() == "") {
-                                $('#addEmail').val(data.dato || '');
-                                $('#addEmail').attr("required", true);
+                                $('#editEmail').val(data.dato || '');
+                                $('#editEmail').attr("required", true);
                                 $('#input5_not_found').css('display', 'none');
                                 $('#input5_5_not_found').css('display', 'block');
                             }
