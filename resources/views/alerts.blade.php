@@ -465,10 +465,19 @@
                                 }
                             @endphp
 
-                            <div>
+                            <div class="flex flex-col">
+
                                 <div class="responsive-container alerta">
+
                                     <div class="item">
-                                        <i class="fa-solid fa-heart-pulse"></i>
+                                        <div style="display: flex; flex-direction: column; align-items: center;">
+                                            <i class="fa-solid fa-heart-pulse" style="align-self: center;"></i>
+                                            <p class="text-sm font-normal text-gray-900 dark:text-gray-100 mt-2"
+                                                style="white-space: nowrap;">
+                                                Nº: {{ $alert->id }}
+                                            </p>
+                                        </div>
+
                                         <div>
                                             <p
                                                 class="text-lg font-semibold text-gray-900 dark:text-gray-100 especialidad">
@@ -482,6 +491,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+
                                     <div class="flex-1" style="min-width: 135px">
                                         <p class="text-base font-semibold text-gray-900 dark:text-gray-100">
                                             Paciente
@@ -568,8 +579,20 @@
                                         @endphp
                                         <div class="div-estados custom-scrollbar">
                                             @foreach ($estados as $estado)
-                                                <div class="estado_background">
-                                                    <p class="estado">
+                                                <div
+                                                    class="estado_background {{ match ($estado->estado_id) {
+                                                        1 => 'btn-success', // Programada
+                                                        2 => 'btn-danger', // Vencida
+                                                        3 => 'btn-danger', // Sin contactar
+                                                        4 => 'btn-success', // Completada
+                                                        5 => 'btn-danger', // Cancelada
+                                                        6 => 'btn-success', // Confirmado (custom)
+                                                        7 => 'btn-success', // Contactado
+                                                        8 => 'btn-danger', // Rechazado (custom)
+                                                        9 => 'btn-success', // Informado por mail (custom)
+                                                        default => '', // Clase vacía para estados no definidos
+                                                    } }}">
+                                                    <p class="estado ">
                                                         {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}</p>
                                                 </div>
                                             @endforeach
@@ -589,9 +612,8 @@
                                 </div>
 
                             </div>
-
+                        @endforeach
                     </div>
-                    @endforeach
 
                 </div>
             </div>

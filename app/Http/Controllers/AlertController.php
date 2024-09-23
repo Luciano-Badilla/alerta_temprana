@@ -195,6 +195,7 @@ class AlertController extends Controller
     public function edit_index($id)
     {
         $alert = AlertModel::find($id);
+        $estados = EstadoAlertaModel::getEstadosById($id);
         if ($alert->is_in_alephoo) {
             $personaAlephoo = new PersonaAlephooModel();
             $persona = $personaAlephoo->getPersonalDataByIdArray($alert->persona_id);
@@ -203,7 +204,7 @@ class AlertController extends Controller
         }
 
         $especialidades = EspecialidadModel::all();
-        return view('edit_alert', ['alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona]);
+        return view('edit_alert', ['alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona, 'estados' => $estados]);
     }
 
     public function edit(Request $request)
@@ -373,9 +374,51 @@ class AlertController extends Controller
 
         // Lógica para eliminar el estado de la base de datos
         EstadoAlertaModel::where('alerta_id', $alertId)
-                         ->where('estado_id', $estadoId)
-                         ->delete();
+            ->where('estado_id', $estadoId)
+            ->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    public function completed(Request $request)
+    {
+        $id = $request->input('editAlertId');
+        $alert = AlertModel::find($id);
+
+        $estadoAnterior = EstadoAlertaModel::getEstadosById($id)->where('estado_id', '=', 1)->first();
+        if ($estadoAnterior) {
+            $estadoAnterior->delete();
+        }
+
+        $nuevoEstado = new EstadoAlertaModel();
+        $nuevoEstado->estado_id = 4;
+        $nuevoEstado->alerta_id = $id;
+        $nuevoEstado->save();
+
+        if ($alert->tipo_id == 2) {
+            $nuevaAlerta = new AlertModel();
+            $nuevaAlerta->persona_id = $alert->persona_id;
+            $nuevaAlerta->especialidad_id = $alert->especialidad_id;
+            $nuevaAlerta->detalle = $alert->detalle;
+            $nuevaAlerta->is_in_alephoo = $alert->is_in_alephoo;
+            $nuevaAlerta->tipo_id = $alert->tipo_id;
+            $nuevaAlerta->frecuencia = $alert->frecuencia;
+            $nuevaAlerta->tipo_frecuencia = $alert->tipo_frecuencia;
+            if ($nuevaAlerta->tipo_frecuencia == 'meses') {
+                $nuevaAlerta->fecha_objetivo = Carbon::parse($alert->fecha_objetivo)->addMonths($nuevaAlerta->frecuencia);
+            } else if ($nuevaAlerta->tipo_frecuencia == 'anios') {
+                $nuevaAlerta->fecha_objetivo = Carbon::parse($alert->fecha_objetivo)->addYears($nuevaAlerta->frecuencia);
+            }
+            $nuevaAlerta->created_by = Auth::user()->name;
+            $nuevaAlerta->save();
+
+            $nuevoEstado = new EstadoAlertaModel();
+            $nuevoEstado->estado_id = 1;
+            $nuevoEstado->alerta_id = $nuevaAlerta->id;
+            $nuevoEstado->save();
+        }
+
+
+        return redirect()->route('alerts')->with('success', 'Alerta completada correctamente.');
     }
 }

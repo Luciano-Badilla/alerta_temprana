@@ -50,6 +50,10 @@ Route::get('/alerts/gest_alert/{id}', [AlertController::class, 'gest_index'])
     ->middleware(['auth', 'verified'])
     ->name('alert.gest');
 
+Route::post('/alerts/gest_alert', [AlertController::class, 'completed'])
+    ->middleware(['auth', 'verified'])
+    ->name('alert.completed');
+
 
 Route::post('/estado/agregar', [AlertController::class, 'agregarEstado'])->name('estado.agregar');
 Route::post('/estado/eliminar', [AlertController::class, 'eliminarEstado'])->name('estado.eliminar');

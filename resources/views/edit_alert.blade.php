@@ -125,21 +125,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color: white">
-                <div id="alert_paciente" class="alert-danger" style="display: none; text-align: center; padding:2px;">
-                    El paciente no se encuentra ingresado en Alephoo ni en la base de datos local, deberá ser cargado
-                    manualmente.
-                </div>
-                <div id="alert2_paciente" class="alert-danger" style="display: none; text-align: center; padding:2px;">
-                    El paciente no se encuentra ingresado en Alephoo, estos datos fueros extraidos de la base de datos
-                    local, puede que esten desactualizados.
-                </div>
-                <div id="alert3_paciente" class="alert-danger" style="display: none; text-align: center; padding:2px;">
-                    El paciente se encuentra ingresado en Alephoo, pero algunos datos no estan cargados.
-                </div>
-                <div id="alert4_paciente" class="alert-danger" style="display: none; text-align: center; padding:2px;">
-                    El paciente se encuentra ingresado en Alephoo, algunos datos no estan cargados, pero se encontraron
-                    en
-                    la base de datos local.
+                <div id="alert_completed" class="alert-warning" style="display: none; text-align: center; padding:2px;">
+                    Esta alerta no se puede editar porque se encuentra completada.
                 </div>
 
                 <form id="outer-form" action="{{ route('alert.edit_store') }}" method="POST">
@@ -342,7 +329,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
 
 
                             </div>
@@ -358,7 +345,6 @@
         </div>
 
 </x-app-layout>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -369,6 +355,27 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
+    // Convierte los datos a formato JSON y asegúrate de que estén entre comillas
+    const estadosDinamicos = @json($estados);
+
+    let completada = false;
+
+    for (let i = 0; i < estadosDinamicos.length; i++) {
+        if (estadosDinamicos[i].estado_id === 4) {
+            completada = true;
+            break; // Detenemos el bucle si encontramos el estado 9
+        }
+    }
+
+    if (completada) {
+        // Selecciona todos los inputs y los desactiva
+        document.querySelectorAll('input').forEach(input => input.disabled = true);
+        document.querySelectorAll('select').forEach(input => input.disabled = true);
+        document.querySelectorAll('textarea').forEach(input => input.disabled = true);
+        document.querySelectorAll('button').forEach(input => input.disabled = true);
+        $('#alert_completed').show();
+
+    }
     tipo = "{{ $alert->tipo_id }}";
     tipo_frecuencia = "{{ $alert->tipo_frecuencia }}";
     frecuencia = "{{ $alert->frecuencia }}";
@@ -427,6 +434,7 @@
 
 
     $(document).ready(function() {
+
 
         // Ajuste de altura después de un pequeño retraso
         setTimeout(function() {

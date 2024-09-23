@@ -207,21 +207,57 @@
 </style>
 
 <x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-lg text-gray-800 leading-tight">
+            {{ __('Gestion alerta Nº ' . $alert->id) }}
+        </h2>
+    </x-slot>
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Completar alerta?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="flex flex-col gap-2">
+                        <p class="alert alert-danger">Al completar la alerta se marcara como completada y ya no se podra
+                            gestionar.</p>
+
+                        <button type="button" id="submit_form" class="btn btn-success">Completar alerta</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color: white">
-                <div id="alert_state_success" class="alert-success" style="display: none; text-align: center; padding:2px;">
+                <div id="alert_state_completed" class="alert-success"
+                    style="display: none; text-align: center; padding:2px;">
+                    Esta alerta esta completada
+                </div>
+                <div id="alert_state_success" class="alert-success"
+                    style="display: none; text-align: center; padding:2px;">
                     Estado agregado correctamente
                 </div>
-                <div id="alert_state_exist" class="alert-warning" style="display: none; text-align: center; padding:2px;">
+                <div id="alert_state_exist" class="alert-warning"
+                    style="display: none; text-align: center; padding:2px;">
                     El estado ya esta agregado
                 </div>
-                <div id="alert_state_error" class="alert-danger" style="display: none; text-align: center; padding:2px;">
+                <div id="alert_state_date_disabled" class="alert-warning"
+                    style="display: none; text-align: center; padding:2px;">
+                    Esta alerta se activara en
+                    {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
+                </div>
+                <div id="alert_state_error" class="alert-danger"
+                    style="display: none; text-align: center; padding:2px;">
                     Hubo un error al agregar el estado
                 </div>
 
-                <form id="outer-form" action="{{ route('alert.edit_store') }}" method="POST">
+                <form id="outer-form" action="{{ route('alert.completed') }}" method="POST">
                     @csrf
                     <div class="container">
 
@@ -327,7 +363,8 @@
                             <button type="button" class="btn btn-dark" data-estado="Contactado">Contactado</button>
                             <button type="button" class="btn btn-dark" data-estado="Confirmado">Confirmado</button>
                             <button type="button" class="btn btn-dark" data-estado="Rechazado">Rechazado</button>
-                            <button type="button" class="btn btn-success" data-estado="Completada">Completada</button>
+                            <button type="button" class="btn btn-success" data-estado="Completada"
+                                data-bs-toggle="modal" data-bs-target="#infoModal">Completar</button>
                         </div>
 
 
@@ -383,6 +420,43 @@
             estadosPresentes.add(estadoId);
         });
 
+        const alertDate = new Date(
+        '{{ $alert->fecha_objetivo }}'); // Asegúrate de que esto tenga el formato correcto
+        const currentDate = new Date();
+
+        // Comparar mes y año
+        const isSameMonthAndYear = (alertDate.getFullYear() === currentDate.getFullYear() &&
+            alertDate.getMonth() === currentDate.getMonth());
+
+        // Verificar si el estado presente incluye el estado 4
+        /*if (estadosPresentes.has(String(4))) {
+            alerts('alert_state_completed');
+            const buttonsDiv = document.querySelector('.buttons_div');
+
+            // Obtiene todos los hijos directos del div y los desactiva
+            const buttons = buttonsDiv.children;
+            Array.from(buttons).forEach(button => {
+                button.setAttribute('disabled', 'true');
+            });
+            return;
+        }*/
+
+        if (estadosPresentes.has(String(4)) || !isSameMonthAndYear) {
+            if (estadosPresentes.has(String(4))) {
+                alerts('alert_state_completed');
+            } else {
+                alerts('alert_state_date_disabled');
+            }
+            const buttonsDiv = document.querySelector('.buttons_div');
+
+            // Obtiene todos los hijos directos del div y los desactiva
+            const buttons = buttonsDiv.children;
+            Array.from(buttons).forEach(button => {
+                button.setAttribute('disabled', 'true');
+            });
+            return;
+        }
+
         buttons.forEach(button => {
             button.addEventListener('click', function() {
                 const estadoText = this.dataset.estado.trim();
@@ -394,9 +468,13 @@
 
                 // Verificar si el estado ya está presente en el Set (en memoria)
                 if (estadosPresentes.has(String(estadoId))) {
-                    alerts('alert_state_exist');// Puedes usar una alerta o manejarlo de otra forma
+                    alerts(
+                        'alert_state_exist'
+                    ); // Puedes usar una alerta o manejarlo de otra forma
                     return;
                 }
+
+
 
                 // Eliminar el estado que debe ser reemplazado
                 if (estadosToRemove[estadoId]) {
@@ -446,12 +524,23 @@
             });
         }
 
-        function alerts(alertaId){
+        function alerts(alertaId) {
             $('#alert_state_success').hide();
             $('#alert_state_exist').hide();
             $('#alert_state_error').hide();
+            $('#alert_state_completed').hide();
+            $('#alert_state_date_disabled').hide();
 
             $('#' + alertaId).show();
         }
+
+        function completed() {
+            $('#outer-form').submit();
+        }
+
+        $('#submit_form').on('click', completed);
+
+
+
     });
 </script>
