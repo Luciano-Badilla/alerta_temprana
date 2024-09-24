@@ -390,6 +390,11 @@ class AlertController extends Controller
             $estadoAnterior->delete();
         }
 
+        $estadoAnterior = EstadoAlertaModel::getEstadosById($id)->where('estado_id', '=', 2)->first();
+        if ($estadoAnterior) {
+            $estadoAnterior->delete();
+        }
+
         $nuevoEstado = new EstadoAlertaModel();
         $nuevoEstado->estado_id = 4;
         $nuevoEstado->alerta_id = $id;
@@ -405,9 +410,9 @@ class AlertController extends Controller
             $nuevaAlerta->frecuencia = $alert->frecuencia;
             $nuevaAlerta->tipo_frecuencia = $alert->tipo_frecuencia;
             if ($nuevaAlerta->tipo_frecuencia == 'meses') {
-                $nuevaAlerta->fecha_objetivo = Carbon::parse($alert->fecha_objetivo)->addMonths($nuevaAlerta->frecuencia);
+                $nuevaAlerta->fecha_objetivo = Carbon::now()->addMonths($nuevaAlerta->frecuencia);
             } else if ($nuevaAlerta->tipo_frecuencia == 'anios') {
-                $nuevaAlerta->fecha_objetivo = Carbon::parse($alert->fecha_objetivo)->addYears($nuevaAlerta->frecuencia);
+                $nuevaAlerta->fecha_objetivo = Carbon::now()->addYears($nuevaAlerta->frecuencia);
             }
             $nuevaAlerta->created_by = Auth::user()->name;
             $nuevaAlerta->save();

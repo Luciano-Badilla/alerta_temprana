@@ -592,7 +592,7 @@
                                                         9 => 'btn-success', // Informado por mail (custom)
                                                         default => '', // Clase vacía para estados no definidos
                                                     } }}">
-                                                    <p class="estado ">
+                                                    <p class="estado">
                                                         {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}</p>
                                                 </div>
                                             @endforeach
@@ -608,19 +608,14 @@
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                     </div>
-
                                 </div>
-
                             </div>
                         @endforeach
                     </div>
-
                 </div>
             </div>
-
         </div>
     </div>
-
     </div>
 
 </x-app-layout>
@@ -732,7 +727,7 @@
 
             document.querySelectorAll('.alerta').forEach(alert => {
                 const alertEspecialidad = alert.querySelector('.especialidad').textContent;
-                const alertEstado = alert.querySelector('.estado').textContent;
+                const alertEstado = alert.querySelector('.div-estados').textContent;
                 const alertDate = alert.querySelector(
                         '.flex-1 p.text-sm.font-normal.text-gray-900.dark\\:text-gray-100').textContent
                     .trim();

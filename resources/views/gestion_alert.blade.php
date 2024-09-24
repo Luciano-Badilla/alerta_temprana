@@ -223,7 +223,6 @@
                     <div class="flex flex-col gap-2">
                         <p class="alert alert-danger">Al completar la alerta se marcara como completada y ya no se podra
                             gestionar.</p>
-
                         <button type="button" id="submit_form" class="btn btn-success">Completar alerta</button>
                     </div>
                 </div>
@@ -358,13 +357,13 @@
                         </div>
 
                         <div class="buttons_div">
-                            <button type="button" class="btn btn-dark" data-estado="Sin contactar">Sin
+                            <button type="button" class="btn btn-dark" data-estado="Sin contactar"><i class="fa-solid fa-phone-slash"></i> Sin
                                 contactar</button>
-                            <button type="button" class="btn btn-dark" data-estado="Contactado">Contactado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Confirmado">Confirmado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Rechazado">Rechazado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Contactado"><i class="fa-solid fa-phone-flip"></i> Contactado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Confirmado"><i class="fa-solid fa-calendar-check"></i> Confirmado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Rechazado"><i class="fa-solid fa-calendar-xmark"></i> Rechazado</button>
                             <button type="button" class="btn btn-success" data-estado="Completada"
-                                data-bs-toggle="modal" data-bs-target="#infoModal">Completar</button>
+                                data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fa-solid fa-check"></i> Completar</button>
                         </div>
 
 
@@ -424,9 +423,8 @@
         '{{ $alert->fecha_objetivo }}'); // Asegúrate de que esto tenga el formato correcto
         const currentDate = new Date();
 
-        // Comparar mes y año
-        const isSameMonthAndYear = (alertDate.getFullYear() === currentDate.getFullYear() &&
-            alertDate.getMonth() === currentDate.getMonth());
+        // Comprobar si la fecha ha pasado
+        const hasPassed = alertDate < currentDate;
 
         // Verificar si el estado presente incluye el estado 4
         /*if (estadosPresentes.has(String(4))) {
@@ -441,7 +439,7 @@
             return;
         }*/
 
-        if (estadosPresentes.has(String(4)) || !isSameMonthAndYear) {
+        if (estadosPresentes.has(String(4)) || !hasPassed) {
             if (estadosPresentes.has(String(4))) {
                 alerts('alert_state_completed');
             } else {
