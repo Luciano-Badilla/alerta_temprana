@@ -144,7 +144,7 @@
                                     <label for="editDNI" class="form-label">DNI:</label>
                                     <div class="input-wrapper">
                                         <input type="text" class="form-control" id="editDNI" name="editDNI"
-                                            value="{{ $persona->documento }}" placeholder="Numero de DNI" required>
+                                            value="{{ $persona->documento }}" placeholder="Numero de DNI" required readonly>
                                         <button type="button" class="btn btn-dark" id="searchByDni">
                                             <i id="search_icon" class="fa-solid fa-magnifying-glass"
                                                 style="display: block"></i>

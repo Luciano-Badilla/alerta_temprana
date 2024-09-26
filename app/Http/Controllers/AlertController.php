@@ -353,7 +353,6 @@ class AlertController extends Controller
 
     public function agregarEstado(Request $request)
     {
-        log::info("Agregar");
         $alertId = $request->input('alertId');
         $estadoId = $request->input('estadoId');
 
@@ -368,7 +367,6 @@ class AlertController extends Controller
 
     public function eliminarEstado(Request $request)
     {
-        log::info("Eliminar");
         $alertId = $request->input('alertId');
         $estadoId = $request->input('estadoId');
 

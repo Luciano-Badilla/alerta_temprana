@@ -8,8 +8,10 @@
     use App\Models\TipoModel;
     use Carbon\Carbon;
 @endphp
-
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
+    /* styles.css */
+
     .responsive-container {
         padding: 1rem;
         background-color: white;
@@ -82,17 +84,6 @@
     .search_and_filters_div {
         display: flex;
         flex-direction: row;
-    }
-
-    .div-estados {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        /* Espacio entre los elementos */
-        justify-content: flex-start;
-        /* Centra el contenedor horizontalmente */
-        max-height: 100px;
-        overflow: auto;
     }
 
     .estado {
@@ -279,17 +270,6 @@
             /* Color de la pista de la barra de desplazamiento */
         }
 
-        .div-estados {
-            display: flex;
-            flex-direction: row;
-            /* Dirección en la que los elementos se colocan */
-            flex-wrap: wrap;
-            /* Permite que los elementos se envuelvan en varias líneas */
-            gap: 5px;
-            /* Espacio entre los elementos */
-            justify-content: flex-start;
-        }
-
 
     }
 
@@ -372,7 +352,7 @@
                 @endif
                 <div class="d-flex justify-content-left p-3 bg-light rounded shadow-sm">
                     <div class="container mt-4">
-                        <div class="justify-between search_and_filters_div">
+                        <div class="justify-between search_and_filters_div mb-2">
                             <div class="row mb-3" style="display: flex; flex-direction: column">
                                 <div style="display: flex; align-items: center; gap: 10px" class="flex-wrap">
                                     <button id="filterButton" class="btn btn-dark">
@@ -425,7 +405,7 @@
                                             <div id="date-filters">
                                                 <select class="form-control" id="month"
                                                     style="margin-top: 5px; border: 1px solid #ced4da; border-radius: 0.25rem; padding: 0.375rem 0.75rem;">
-                                                    <option value="">Selecciona el mes</option>
+                                                    <option value="">Todos los meses</option>
                                                     <option value="01">Enero</option>
                                                     <option value="02">Febrero</option>
                                                     <option value="03">Marzo</option>
@@ -454,114 +434,78 @@
                                     placeholder="Busqueda general" style="margin-top: -5%;">
                             </div>
                         </div>
+                        <div class="text-center max-w-md" id="no_alerts" style="margin: 0 auto;">
+                            <div class="p-6 rounded-lg mt-3">
+                                <div
+                                    class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-filter-circle-xmark text-3xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">No hay alertas médicas</h2>
+                                <p class="text-gray-600 mb-6">
+                                    No se encontraron alertas según los filtros aplicados.
+                                </p>
+                            </div>
+                        </div>
 
-                        @foreach ($alerts->sortByDesc('fecha_objetivo') as $alert)
-                            @php
-                                if ($alert->is_in_alephoo == 1) {
-                                    $response = PersonaAlephooModel::getPersonalDataById($alert->persona_id);
-                                    $persona = json_decode($response->getContent());
-                                } else {
-                                    $persona = PersonaLocalModel::find($alert->persona_id);
-                                }
-                            @endphp
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                            @foreach ($alerts->sortByDesc('fecha_objetivo') as $alert)
+                                @php
+                                    if ($alert->is_in_alephoo == 1) {
+                                        $response = PersonaAlephooModel::getPersonalDataById($alert->persona_id);
+                                        $persona = json_decode($response->getContent());
+                                    } else {
+                                        $persona = PersonaLocalModel::find($alert->persona_id);
+                                    }
+                                    $celularLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'celular')
+                                            ->first()->dato ?? null;
+                                    $emailLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'email')
+                                            ->first()->dato ?? null;
+                                @endphp
 
-                            <div class="flex flex-col">
-
-                                <div class="responsive-container alerta">
-
-                                    <div class="item">
-                                        <div style="display: flex; flex-direction: column; align-items: center;">
-                                            <i class="fa-solid fa-heart-pulse" style="align-self: center;"></i>
-                                            <p class="text-sm font-normal text-gray-900 dark:text-gray-100 mt-2"
-                                                style="white-space: nowrap;">
-                                                Nº: {{ $alert->id }}
-                                            </p>
+                                <div
+                                    class="bg-white border border-gray-200 rounded-lg shadow-sm alerta flex flex-col justify-between h-full">
+                                    <div class="p-4 flex-grow">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <h2 class="text-lg font-semibold text-gray-800"><i
+                                                    class="fa-solid fa-heart-pulse"></i> #{{ $alert->id }}</h2>
+                                            <span
+                                                class="text-sm text-gray-800 fecha">{{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}</span>
                                         </div>
 
-                                        <div>
-                                            <p
-                                                class="text-lg font-semibold text-gray-900 dark:text-gray-100 especialidad">
+                                        <div class="space-y-2 mb-1">
+                                            <h3 class="font-semibold text-gray-700 especialidad">
                                                 {{ EspecialidadModel::find($alert->especialidad_id)->nombre ?? '' }}
-                                            </p>
-                                            <div class="mt-2">
-                                                <p
-                                                    class="text-sm font-normal text-gray-600 dark:text-gray-500 custom-scrollbar">
-                                                    {{ $alert->detalle }}
-                                                </p>
+                                            </h3>
+                                            <div
+                                                class="h-24 overflow-y-auto p-2 bg-gray-50 rounded-md custom-scrollbar">
+                                                <p class="text-sm text-gray-600">{{ $alert->detalle }}</p>
                                             </div>
                                         </div>
-                                    </div>
 
+                                        <div class="mb-3">
+                                            <h3 class="text-sm font-medium text-gray-700">Paciente</h3>
+                                            <p class="text-sm text-gray-600">{{ $persona->apellidos }}
+                                                {{ $persona->nombres }}</p>
+                                            <p class="text-sm text-gray-500">DNI: {{ $persona->documento }}</p>
+                                        </div>
 
-                                    <div class="flex-1" style="min-width: 135px">
-                                        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">
-                                            Paciente
-                                        </p>
-                                        <div class="mt-2">
-                                            <p class="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                                {{ $persona->apellidos }} {{ $persona->nombres }}
+                                        <div class="mb-3">
+                                            <h3 class="text-sm font-medium text-gray-700">Contacto</h3>
+                                            <p class="text-sm text-gray-600">
+                                                {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'N/A' }}
                                             </p>
-                                            <p class="text-sm font-normal text-gray-600 dark:text-gray-500">
-                                                DNI: {{ $persona->documento }}
-                                            </p>
-                                            <p class="text-sm font-normal text-gray-600 dark:text-gray-500">
-                                                Fecha de nacimiento:
-                                                {{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/Y') }}
+                                            <p class="text-sm text-gray-600">
+                                                {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'N/A' }}
                                             </p>
                                         </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-m font-semibold text-gray-900 dark:text-gray-100">
-                                            Comunicacion
-                                        </p>
-                                        <div class="mt-2">
-                                            <p class="text-sm font-normal text-gray-600 dark:text-gray-500">
-                                                Celular:
-                                                @php
-                                                    $celularLocal =
-                                                        DatoPersonaModel::where('persona_id', $persona->id)
-                                                            ->where('tipo_dato', 'celular')
-                                                            ->first()->dato ?? null;
-                                                    $emailLocal =
-                                                        DatoPersonaModel::where('persona_id', $persona->id)
-                                                            ->where('tipo_dato', 'email')
-                                                            ->first()->dato ?? null;
-                                                @endphp
-                                                {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'Celular no encontrado' }}
-                                            </p>
-                                            <p class="text-sm font-normal text-gray-600 dark:text-gray-500">
-                                                Email:
-                                                {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'Email no encontrado' }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <!--<div class="flex-1">
-                                    <p class="text-m font-semibold text-gray-900 dark:text-gray-100">
-                                        Detalle de la alerta
-                                    </p>
-                                    <div class="mt-2">
-                                        <p
-                                            class="text-sm font-normal text-gray-600 dark:text-gray-500 custom-scrollbar">
-                                            {{ $alert->detalle }}
-                                        </p>
-                                    </div>
-                                </div>-->
-                                    <div class="flex-1">
-                                        <p class="text-m font-semibold text-gray-900 dark:text-gray-100">
-                                            Fecha
-                                        </p>
-                                        <div class="mt-2">
-                                            <p class="text-sm font-normal text-gray-900 dark:text-gray-100">
-                                                {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-m font-semibold text-gray-900 dark:text-gray-100">
-                                            Repetición
-                                        </p>
-                                        <div class="mt-2">
-                                            <p class="text-sm font-normal text-gray-900 dark:text-gray-100">
+
+                                        <div class="mb-3">
+                                            <h3 class="text-sm font-medium text-gray-700">Repetición</h3>
+                                            <p class="text-sm text-gray-600">
                                                 @if (TipoModel::find($alert->tipo_id)->nombre === 'Una vez')
                                                     {{ TipoModel::find($alert->tipo_id)->nombre }}
                                                 @else
@@ -569,48 +513,43 @@
                                                 @endif
                                             </p>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-m font-semibold text-gray-900 dark:text-gray-100">
-                                            Estados
-                                        </p>
-                                        @php
-                                            $estados = EstadoAlertaModel::getEstadosById($alert->id);
-                                        @endphp
-                                        <div class="div-estados custom-scrollbar">
-                                            @foreach ($estados as $estado)
-                                                <div
-                                                    class="estado_background {{ match ($estado->estado_id) {
-                                                        1 => 'btn-success', // Programada
-                                                        2 => 'btn-danger', // Vencida
-                                                        3 => 'btn-danger', // Sin contactar
-                                                        4 => 'btn-success', // Completada
-                                                        5 => 'btn-danger', // Cancelada
-                                                        6 => 'btn-success', // Confirmado (custom)
-                                                        7 => 'btn-success', // Contactado
-                                                        8 => 'btn-danger', // Rechazado (custom)
-                                                        9 => 'btn-success', // Informado por mail (custom)
-                                                        default => '', // Clase vacía para estados no definidos
-                                                    } }}">
-                                                    <p class="estado">
-                                                        {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}</p>
-                                                </div>
-                                            @endforeach
+
+                                        <div class="mb-3 div-estados">
+                                            <h3 class="text-sm font-medium text-gray-700">Estados</h3>
+                                            <div class="flex flex-wrap gap-1 mt-1">
+                                                @php
+                                                    $estados = EstadoAlertaModel::getEstadosById($alert->id);
+                                                @endphp
+                                                @foreach ($estados as $estado)
+                                                    <span
+                                                        class="px-2 py-1 text-xs font-medium rounded-full {{ match ($estado->estado_id) {
+                                                            1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
+                                                            2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
+                                                            default => 'bg-gray-100 text-gray-800',
+                                                        } }}">
+                                                        {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col gap-1">
+
+                                    <div class="flex justify-end items-center space-x-2 pr-4 pb-4">
+                                        <!-- Agrega 'p-4' o el tamaño que prefieras -->
                                         <a href="{{ route('alert.gest', ['id' => $alert->id]) }}"
-                                            style="margin-top:auto" class="btn btn-dark">
-                                            <i class="fa-solid fa-clipboard"></i>
+                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                            Gestionar
                                         </a>
                                         <a href="{{ route('alert.edit', ['id' => $alert->id]) }}"
-                                            class="btn btn-dark">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                            Editar
                                         </a>
                                     </div>
+
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -728,9 +667,8 @@
             document.querySelectorAll('.alerta').forEach(alert => {
                 const alertEspecialidad = alert.querySelector('.especialidad').textContent;
                 const alertEstado = alert.querySelector('.div-estados').textContent;
-                const alertDate = alert.querySelector(
-                        '.flex-1 p.text-sm.font-normal.text-gray-900.dark\\:text-gray-100').textContent
-                    .trim();
+                const alertDate = alert.querySelector('.fecha').textContent.trim();
+
 
                 // Convertir alertDate a formato comparable (asumiendo dd/mm/yyyy)
                 const alertDateFormatted = new Date(alertDate.split('/').reverse().join('-'));
@@ -759,12 +697,20 @@
                 }
 
                 // Filtrar por año
-                if (selectedYear && alertDateFormatted.getFullYear().toString() !== selectedYear) {
+                if (selectedYear && !alertDateFormatted.getFullYear().toString().includes(
+                        selectedYear)) {
                     isVisible = false;
                 }
 
+
                 alert.style.display = isVisible ? 'flex' : 'none';
             });
+
+            if (countVisibleAlerts() == 0) {
+                $('#no_alerts').css('display', 'flex');
+            } else {
+                $('#no_alerts').hide();
+            }
         }
 
         // Mostrar/Ocultar filtros
@@ -795,5 +741,10 @@
 
         // Aplicar filtros al escribir en el campo de búsqueda
         searchInput.addEventListener('input', applyFilters);
+
+        function countVisibleAlerts() {
+            var visibleAlerts = $('.alerta:visible').length;
+            return visibleAlerts;
+        }
     });
 </script>

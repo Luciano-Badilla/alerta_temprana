@@ -68,17 +68,24 @@ class SendReportReminders extends Command
             } else {
                 $email = PersonaLocalModel::find($alert->persona_id)->email;
             }
-            Mail::to($email)->send(new ReportReminderMail($alert));
+            if ($email) {
+                Mail::to($email)->send(new ReportReminderMail($alert));
+                $estadoNuevo = new EstadoAlertaModel();
+                $estadoNuevo->estado_id = 9;
+                $estadoNuevo->alerta_id = $alert->id;
+                $estadoNuevo->save();
+            }else{
+                $estadoNuevo = new EstadoAlertaModel();
+                $estadoNuevo->estado_id = 10;
+                $estadoNuevo->alerta_id = $alert->id;
+                $estadoNuevo->save();
+            }
 
             /*$estadoAnterior = EstadoAlertaModel::where('alerta_id', '=', $alert->id)
             ->where('estado_id','=',1)->first();
             $estadoAnterior->delete();
             log::info($estadoAnterior);*/
 
-            $estadoNuevo = new EstadoAlertaModel();
-            $estadoNuevo->estado_id = 9;
-            $estadoNuevo->alerta_id = $alert->id;
-            $estadoNuevo->save();
         }
 
         $this->info('Recordatorios enviados exitosamente.');
@@ -103,8 +110,6 @@ class SendReportReminders extends Command
                 $estadoNuevo->save();
             }
         }
-
-        log::info($alertsExpired);
 
         return 0;
     }

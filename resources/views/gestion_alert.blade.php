@@ -8,8 +8,32 @@
     use App\Models\EstadoAlertaModel;
     use Carbon\Carbon;
 @endphp
-
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
+    .custom-scrollbar {
+        max-height: 100px;
+        overflow: auto;
+        text-align: start;
+
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        /* Ancho de la barra de desplazamiento */
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        /* Color del pulgar de la barra de desplazamiento */
+        border-radius: 10px;
+        /* Radio de esquina del pulgar */
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        /* Color de la pista de la barra de desplazamiento */
+    }
+
     .container {
         padding: 1%;
         display: flex;
@@ -84,30 +108,6 @@
         flex-wrap: wrap;
         gap: 5px;
         justify-content: flex-start;
-    }
-
-    .estado {
-        color: white;
-        font-size: 12px;
-        margin: 0;
-        /* Elimina cualquier margen */
-        padding: 0px;
-        text-align: center;
-        /* Centra el texto horizontalmente */
-        display: flex;
-        align-items: center;
-        /* Centra verticalmente el texto dentro del contenedor */
-    }
-
-    .estado_background {
-        background-color: #343A40;
-        border-radius: 0.375rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* Centra el contenido dentro del div vertical y horizontalmente */
-        padding: 10px;
-        /* Ajusta el relleno según sea necesario */
     }
 
     .buttons_div {
@@ -270,16 +270,23 @@
                                     <p style="color: #495057">
                                         {{ EspecialidadModel::find($alert->especialidad_id)->nombre }}</p>
                                 </div>
-
+                                <div class="flex gap-2">
+                                    <p><strong>Fecha de creación:</strong>
+                                        {{ ucfirst(\Carbon\Carbon::parse($alert->created_at)->locale('es')->translatedFormat('F Y')) }}
+                                    <p><strong>Fecha de la alerta:</strong>
+                                        {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
+                                </div>
                                 <div>
                                     <label for="editDetalle" class="form-label">Detalle:</label>
-                                    <p style="color: #495057; text-align: justify;">{{ $alert->detalle }}</p>
+                                    <div class="h-24 overflow-y-auto p-2 bg-gray-50 rounded-md custom-scrollbar">
+                                        <p class="text-sm text-gray-600">{{ $alert->detalle }}</p>
+                                    </div>
 
                                 </div>
                             </div>
                         </div>
                         <div class="form-section">
-                            <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Informacion del
+                            <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Información del
                                     paciente:</b></label>
                             <div class="input-group">
                                 <div class="flex flex-row flex-wrap">
@@ -294,7 +301,8 @@
                                     <div style="flex: 1 1 100%;">
                                         <label for="editFechaNac" class="form-label">Fecha de nacimiento:</label>
                                         <p style="color: #495057">
-                                            {{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/y') }}</p>
+                                            {{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/y') }}
+                                        </p>
                                     </div>
 
                                     <div style="flex: 1 1 50%;">
@@ -339,6 +347,7 @@
                             </div>
                         </div>
                         <div class="form-section">
+
                             <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Estados de la
                                     alerta:</b></label>
                             <div class="input-group">
@@ -347,9 +356,16 @@
                                 @endphp
                                 <div class="div-estados custom-scrollbar">
                                     @foreach ($estados as $estado)
-                                        <div class="estado_background">
-                                            <p class="estado" data-id="{{ $estado->estado_id }}">
-                                                {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}</p>
+                                        <div class="flex">
+                                            <span
+                                                class="estado px-2 py-1 text-xs font-medium rounded-full {{ match ($estado->estado_id) {
+                                                    1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
+                                                    2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
+                                                    default => 'bg-gray-100 text-gray-800',
+                                                } }}"
+                                                data-id="{{ $estado->estado_id }}">
+                                                {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}
+                                            </span>
                                         </div>
                                     @endforeach
                                 </div>
@@ -357,13 +373,18 @@
                         </div>
 
                         <div class="buttons_div">
-                            <button type="button" class="btn btn-dark" data-estado="Sin contactar"><i class="fa-solid fa-phone-slash"></i> Sin
+                            <button type="button" class="btn btn-dark" data-estado="Sin contactar"><i
+                                    class="fa-solid fa-phone-slash"></i> Sin
                                 contactar</button>
-                            <button type="button" class="btn btn-dark" data-estado="Contactado"><i class="fa-solid fa-phone-flip"></i> Contactado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Confirmado"><i class="fa-solid fa-calendar-check"></i> Confirmado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Rechazado"><i class="fa-solid fa-calendar-xmark"></i> Rechazado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Contactado"><i
+                                    class="fa-solid fa-phone-flip"></i> Contactado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Confirmado"><i
+                                    class="fa-solid fa-calendar-check"></i> Confirmado</button>
+                            <button type="button" class="btn btn-dark" data-estado="Rechazado"><i
+                                    class="fa-solid fa-calendar-xmark"></i> Rechazado</button>
                             <button type="button" class="btn btn-success" data-estado="Completada"
-                                data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fa-solid fa-check"></i> Completar</button>
+                                data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fa-solid fa-check"></i>
+                                Completar</button>
                         </div>
 
 
@@ -420,7 +441,7 @@
         });
 
         const alertDate = new Date(
-        '{{ $alert->fecha_objetivo }}'); // Asegúrate de que esto tenga el formato correcto
+            '{{ $alert->fecha_objetivo }}'); // Asegúrate de que esto tenga el formato correcto
         const currentDate = new Date();
 
         // Comprobar si la fecha ha pasado
@@ -486,10 +507,30 @@
                     estadoId: estadoId
                 }, function(response) {
                     if (response.success) {
+                        const estadoClass = (estadoId) => {
+                            switch (estadoId) {
+                                case 1:
+                                case 4:
+                                case 6:
+                                case 7:
+                                case 9:
+                                    return 'bg-green-100 text-green-800';
+                                case 2:
+                                case 3:
+                                case 5:
+                                case 8:
+                                    return 'bg-red-100 text-red-800';
+                                default:
+                                    return 'bg-gray-100 text-gray-800';
+                            }
+                        };
                         const estadoDiv = document.createElement('div');
-                        estadoDiv.className = 'estado_background';
-                        estadoDiv.innerHTML =
-                            `<p class="estado" data-id="${estadoId}">${estadoText}</p>`;
+                        estadoDiv.className = 'flex';
+                        estadoDiv.innerHTML = `
+            <span class="estado px-2 py-1 text-xs font-medium rounded-full ${estadoClass(estadoId)}" data-id="${estadoId}">
+                ${estadoText}
+            </span>`;
+
                         estadosDiv.appendChild(estadoDiv);
 
                         // Añadir el nuevo estado al Set para evitar duplicados
@@ -498,6 +539,7 @@
                         alerts('alert_state_success');
                     }
                 });
+
             });
         });
 
@@ -512,8 +554,8 @@
                     const states = estadosDiv.querySelectorAll('.estado');
                     states.forEach(state => {
                         if (state.dataset.id == estadoIdToRemove) {
-                            estadosDiv.removeChild(state
-                                .parentElement); // Eliminar el div contenedor
+                            state.parentNode
+                                .remove(); // Eliminar el elemento 'span' directamente
                             estadosPresentes.delete(String(
                                 estadoIdToRemove)); // Eliminar el estado del Set
                         }
@@ -521,6 +563,7 @@
                 }
             });
         }
+
 
         function alerts(alertaId) {
             $('#alert_state_success').hide();
