@@ -81,11 +81,6 @@ class SendReportReminders extends Command
                 $estadoNuevo->save();
             }
 
-            /*$estadoAnterior = EstadoAlertaModel::where('alerta_id', '=', $alert->id)
-            ->where('estado_id','=',1)->first();
-            $estadoAnterior->delete();
-            log::info($estadoAnterior);*/
-
         }
 
         $this->info('Recordatorios enviados exitosamente.');

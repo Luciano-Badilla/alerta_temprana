@@ -509,7 +509,15 @@
                                                 @if (TipoModel::find($alert->tipo_id)->nombre === 'Una vez')
                                                     {{ TipoModel::find($alert->tipo_id)->nombre }}
                                                 @else
-                                                    {{ TipoModel::find($alert->tipo_id)->nombre . ' (cada ' . $alert->frecuencia . ' ' . $alert->tipo_frecuencia . ')' }}
+                                                    @if ($alert->frecuencia == 1 && $alert->tipo_frecuencia == 'meses')
+                                                        {{ TipoModel::find($alert->tipo_id)->nombre . ' (cada ' . $alert->frecuencia . ' mes)' }}
+                                                    @elseif ($alert->frecuencia == 1 && $alert->tipo_frecuencia == 'anios')
+                                                        {{ TipoModel::find($alert->tipo_id)->nombre . ' (cada ' . $alert->frecuencia . ' año)' }}
+                                                    @elseif($alert->frecuencia > 1 && $alert->tipo_frecuencia == 'anios')
+                                                        {{ TipoModel::find($alert->tipo_id)->nombre . ' (cada ' . $alert->frecuencia . ' años)' }}
+                                                    @else
+                                                        {{ TipoModel::find($alert->tipo_id)->nombre . ' (cada ' . $alert->frecuencia . ' ' . $alert->tipo_frecuencia . ')' }}
+                                                    @endif
                                                 @endif
                                             </p>
                                         </div>

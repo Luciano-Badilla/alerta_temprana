@@ -10,201 +10,149 @@
 @endphp
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+    @import 'tailwindcss/base';
+    @import 'tailwindcss/components';
+    @import 'tailwindcss/utilities';
+
+    /* Estilos personalizados */
     .custom-scrollbar {
         max-height: 100px;
         overflow: auto;
         text-align: start;
-
     }
 
     .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
-        /* Ancho de la barra de desplazamiento */
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.2);
-        /* Color del pulgar de la barra de desplazamiento */
         border-radius: 10px;
-        /* Radio de esquina del pulgar */
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
         background: transparent;
-        /* Color de la pista de la barra de desplazamiento */
     }
 
-    .container {
-        padding: 1%;
+    /* Remover espacios desaprovechados en los costados */
+    .form-div {
+        padding: 0.75rem
+            /* Elimina el padding lateral */
+    }
+
+    /* Sobrescribir estilos de Tailwind para mantener la estructura deseada */
+    #outer-form .form-section {
+        @apply bg-gray-50 p-4 rounded-lg mb-4 w-full md:w-[48%];
+    }
+
+    #outer-form .input-group {
+        @apply space-y-4;
+    }
+
+    #outer-form .buttons_div {
+        @apply flex flex-row flex-wrap justify-center mt-6 w-full whitespace-nowrap !important;
+
+    }
+
+    .buttons_div {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
         flex-wrap: wrap;
-        /* Para que los elementos se ajusten en pantallas pequeñas */
+        justify-content: center;
+        gap: 1rem;
     }
 
-    .form-section {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 10px;
-        flex: 1;
-        /* Para que ambos divs ocupen el mismo espacio */
-        max-width: 48%;
-        /* Ajusta el ancho de cada sección */
-        box-sizing: border-box;
+    /* Estilos para los botones */
+    #outer-form .btn,
+    #outer-form .btn-dark,
+    #outer-form .btn-success {
+        @apply px-4 py-2 rounded text-white transition-colors duration-200 ease-in-out text-center whitespace-nowrap min-w-[150px];
     }
 
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0px;
+    #outer-form .btn-dark {
+        @apply bg-gray-800 hover:bg-gray-700;
     }
 
-    .input-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 0px;
+    #outer-form .btn-success {
+        @apply bg-green-600 hover:bg-green-700;
     }
 
-    .input-wrapper button {
-        width: auto;
-        padding: 10px;
+    /* Para dispositivos móviles, ajustar el ancho de los botones para que se envuelvan cada 2 */
+    @media (max-width: 640px) {
+        #outer-form .buttons_div button {
+            @apply w-[calc(50%-1rem)];
+            /* Cada botón ocupa la mitad del espacio con un pequeño margen */
+        }
     }
 
-    .error-message {
-        display: none;
-        color: red;
-        margin: 2px;
-    }
-
-    /* Ajusta la altura y el tamaño del contenedor de Select2 */
+    /* Estilos para Select2 (si se usa) */
     .select2-container .select2-selection--single {
         height: 38px !important;
-        /* Ajusta según tus necesidades */
         line-height: 36px !important;
     }
 
     .select2-container .select2-selection--multiple {
         min-height: 38px !important;
-        /* Para selects múltiples */
     }
 
     .select2-container {
         font-size: 16px !important;
     }
 
-    .buttons_div {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-top: 1%;
-        margin-left: 5%;
-    }
-
-    .div-estados {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: flex-start;
-    }
-
-    .buttons_div {
-        display: flex;
-        flex-direction: row;
-        /* O 'column' si prefieres los botones en columna */
-        flex-wrap: wrap;
-        /* Permite que los botones se envuelvan si hay falta de espacio */
-        gap: 10px;
-        /* Espacio entre los botones, ajusta según sea necesario */
-        justify-content: space-between;
-        /* Distribuye los botones uniformemente */
-    }
-
-    .btn,
-    .btn-dark,
-    .btn-success {
-        /* Asegura que todos los botones se expandan para ocupar el mismo espacio */
-        text-align: center;
-        /* Centra el texto dentro del botón */
-        white-space: nowrap;
-        /* Previene que el texto se rompa en varias líneas */
-        min-width: 150px;
-        /* Establece un ancho mínimo para los botones, ajusta según sea necesario */
-    }
-
-
-    /* Media query para pantallas pequeñas */
+    /* Media queries para responsividad */
     @media (max-width: 768px) {
-        .container {
-            flex-direction: column;
-            /* Cambia la dirección a columna en pantallas pequeñas */
+
+        /* Cambiar de filas a columnas en pantallas pequeñas */
+        #outer-form .grid {
+            @apply grid-cols-1 !important;
         }
 
-        .form-section {
-            max-width: 100%;
-            /* Haz que los divs ocupen el 100% del ancho en móviles */
+        /* Cambiar flex-row a flex-col en dispositivos móviles */
+        #outer-form .flex {
+            @apply flex-col;
         }
 
-        .radio-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            /* Espacio entre los elementos */
+        #outer-form .form-section {
+            @apply w-full;
         }
 
-        .radio-item {
-            width: 100%;
+        #outer-form .buttons_div {
+            @apply flex-col items-stretch;
         }
 
-        #personalizadoMeses {
-            max-width: 100%;
+        #outer-form .btn,
+        #outer-form .btn-dark,
+        #outer-form .btn-success {
+            @apply w-full;
         }
 
-        .buttons_div {
-            display: flex;
-            flex-direction: row;
-            gap: 5px;
-            margin-top: 1%;
-            flex-wrap: wrap
+        #outer-form p {
+            @apply text-sm;
         }
 
-        .btn,
-        .btn-dark,
-        .btn-success {
-            flex: 1;
-            /* Asegura que todos los botones se expandan para ocupar el mismo espacio */
-            text-align: center;
-            /* Centra el texto dentro del botón */
-            white-space: nowrap;
-            /* Previene que el texto se rompa en varias líneas */
-            min-width: 150px;
-            /* Establece un ancho mínimo para los botones, ajusta según sea necesario */
+        #outer-form h2 {
+            @apply text-lg;
+        }
+
+        .buttons_div button {
+            width: calc(50% - 0.5rem);
+            /* Cada botón ocupa la mitad del espacio con un pequeño margen */
         }
     }
 
-    @media (min-width: 768px) {
-        .radio-container {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            /* Espacio entre los elementos */
-        }
-
-        .radio-item {
-            flex: 1;
-        }
-
-        #personalizadoMeses {
-            max-width: 50%;
+    @media (max-width: 648px) {
+        .form-div {
+            padding: 0;
+            /* Elimina el padding lateral */
         }
     }
 
+    /* Ocultar elemento personalizado */
     #personalizadoMeses {
-        display: none;
+        @apply hidden;
     }
 </style>
+
 
 <x-app-layout>
     <x-slot name="header">
@@ -231,24 +179,26 @@
         </div>
     </div>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto rounded-lg">
 
-            <div class="overflow-hidden shadow-sm sm:rounded-lg" style="background-color: white">
+            <div class="shadow-sm rounded-lg" style="background-color: white">
+                <!-- Alerta de completado -->
                 <div id="alert_state_completed" class="alert-success"
                     style="display: none; text-align: center; padding:2px;">
-                    Esta alerta esta completada
+                    Esta alerta está completada
                 </div>
+                <!-- Otras alertas -->
                 <div id="alert_state_success" class="alert-success"
                     style="display: none; text-align: center; padding:2px;">
                     Estado agregado correctamente
                 </div>
                 <div id="alert_state_exist" class="alert-warning"
                     style="display: none; text-align: center; padding:2px;">
-                    El estado ya esta agregado
+                    El estado ya está agregado
                 </div>
                 <div id="alert_state_date_disabled" class="alert-warning"
                     style="display: none; text-align: center; padding:2px;">
-                    Esta alerta se activara en
+                    Esta alerta se activará en
                     {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
                 </div>
                 <div id="alert_state_error" class="alert-danger"
@@ -256,143 +206,164 @@
                     Hubo un error al agregar el estado
                 </div>
 
-                <form id="outer-form" action="{{ route('alert.completed') }}" method="POST">
+                <!-- Formulario -->
+                <form id="outer-form" action="{{ route('alert.completed') }}" method="POST" class="form-div">
                     @csrf
-                    <div class="container">
-
-                        <div class="form-section">
-                            <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Información de
-                                    la
-                                    alerta:</b></label>
-                            <div class="input-group">
+                    <div class="space-y-6">
+                        <!-- Información de la alerta -->
+                        <div class="form-section bg-gray-50 p-4 rounded-lg">
+                            <h2 class="text-xl font-bold mb-4">Información de la alerta</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="editEspecialidad" class="form-label">Especialidad:</label>
-                                    <p style="color: #495057">
+                                    <label for="editEspecialidad"
+                                        class="block text-sm font-medium text-gray-700">Especialidad:</label>
+                                    <p class="mt-1 text-sm text-gray-900">
                                         {{ EspecialidadModel::find($alert->especialidad_id)->nombre }}</p>
                                 </div>
-                                <div class="flex gap-2">
-                                    <p><strong>Fecha de creación:</strong>
-                                        {{ ucfirst(\Carbon\Carbon::parse($alert->created_at)->locale('es')->translatedFormat('F Y')) }}
-                                    <p><strong>Fecha de la alerta:</strong>
-                                        {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
+                                <div class="flex flex-col md:flex-row gap-4">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-700">Fecha de creación:</p>
+                                        <p class="mt-1 text-sm text-gray-900">
+                                            {{ ucfirst(\Carbon\Carbon::parse($alert->created_at)->locale('es')->translatedFormat('F Y')) }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-700">Fecha de la alerta:</p>
+                                        <p class="mt-1 text-sm text-gray-900">
+                                            {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detalle -->
+                            <div class="mt-4">
+                                <label for="editDetalle"
+                                    class="block text-sm font-medium text-gray-700">Detalle:</label>
+                                <div class="mt-1 p-2 bg-white border border-gray-300 rounded-md">
+                                    <p class="text-sm text-gray-900">{{ $alert->detalle }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del paciente -->
+                        <div class="form-section bg-gray-50 p-4 rounded-lg">
+                            <h2 class="text-xl font-bold mb-4">Información del paciente</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input type="hidden" id="editAlertId" name="editAlertId" value="{{ $alert->id }}"
+                                    required>
+                                <input type="hidden" id="editId" name="editId" value="{{ $alert->persona_id }}"
+                                    required>
+
+                                <div>
+                                    <label for="editDNI" class="block text-sm font-medium text-gray-700">DNI:</label>
+                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->documento }}</p>
                                 </div>
                                 <div>
-                                    <label for="editDetalle" class="form-label">Detalle:</label>
-                                    <div class="h-24 overflow-y-auto p-2 bg-gray-50 rounded-md custom-scrollbar">
-                                        <p class="text-sm text-gray-600">{{ $alert->detalle }}</p>
-                                    </div>
-
+                                    <label for="editFechaNac" class="block text-sm font-medium text-gray-700">Fecha de
+                                        nacimiento:</label>
+                                    <p class="mt-1 text-sm text-gray-900">
+                                        {{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/y') }}</p>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-section">
-                            <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Información del
-                                    paciente:</b></label>
-                            <div class="input-group">
-                                <div class="flex flex-row flex-wrap">
-                                    <div style="flex: 1 1 100%;">
-                                        <input type="hidden" id="editAlertId" name="editAlertId"
-                                            value="{{ $alert->id }}" required>
-                                        <input type="hidden" id="editId" name="editId"
-                                            value="{{ $alert->persona_id }}" required>
-                                        <label for="editDNI" class="form-label">DNI:</label>
-                                        <p style="color: #495057">{{ $persona->documento }}</p>
-                                    </div>
-                                    <div style="flex: 1 1 100%;">
-                                        <label for="editFechaNac" class="form-label">Fecha de nacimiento:</label>
-                                        <p style="color: #495057">
-                                            {{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->format('d/m/y') }}
-                                        </p>
-                                    </div>
-
-                                    <div style="flex: 1 1 50%;">
-                                        <label for="editApellido" class="form-label">Apellido/s:</label>
-                                        <p style="color: #495057">{{ $persona->apellidos }}</p>
-                                    </div>
-
-                                    <div style="flex: 1 1 50%; margin-left:-40%">
-                                        <label for="editNombre" class="form-label">Nombre/s:</label>
-                                        <p style="color: #495057">{{ $persona->nombres }}</p>
-                                    </div>
-
-
-                                    @php
-                                        $celularLocal =
-                                            DatoPersonaModel::where('persona_id', $persona->id)
-                                                ->where('tipo_dato', 'celular')
-                                                ->first()->dato ?? null;
-                                        $emailLocal =
-                                            DatoPersonaModel::where('persona_id', $persona->id)
-                                                ->where('tipo_dato', 'email')
-                                                ->first()->dato ?? null;
-                                    @endphp
-                                    <div style="flex: 1 1 50%;">
-                                        <label for="editCelular" class="form-label">Celular:</label>
-                                        <p style="color: #495057">
-                                            {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'Celular no encontrado' }}
-                                        </p>
-                                    </div>
-
-                                    <div style="flex: 1 1 50%; margin-left:-40%">
-                                        <label for="editEmail" class="form-label">Email:</label>
-                                        <p style="color: #495057">
-                                            {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'Email no encontrado' }}
-                                        </p>
-                                    </div>
-
-                                    <input type="hidden" id="is_in_alephoo" name="is_in_alephoo"
-                                        value="{{ $alert->is_in_alephoo }}" required>
+                                <div>
+                                    <label for="editApellido"
+                                        class="block text-sm font-medium text-gray-700">Apellido/s:</label>
+                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->apellidos }}</p>
+                                </div>
+                                <div>
+                                    <label for="editNombre"
+                                        class="block text-sm font-medium text-gray-700">Nombre/s:</label>
+                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->nombres }}</p>
                                 </div>
 
+                                <!-- Información de contacto -->
+                                @php
+                                    $celularLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'celular')
+                                            ->first()->dato ?? null;
+                                    $emailLocal =
+                                        DatoPersonaModel::where('persona_id', $persona->id)
+                                            ->where('tipo_dato', 'email')
+                                            ->first()->dato ?? null;
+                                @endphp
+                                <div>
+                                    <label for="editCelular"
+                                        class="block text-sm font-medium text-gray-700">Celular:</label>
+                                    <p class="mt-1 text-sm text-gray-900">
+                                        {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'Celular no encontrado' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label for="editEmail"
+                                        class="block text-sm font-medium text-gray-700">Email:</label>
+                                    <p class="mt-1 text-sm text-gray-900">
+                                        {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'Email no encontrado' }}
+                                    </p>
+                                </div>
+                                <input type="hidden" id="is_in_alephoo" name="is_in_alephoo"
+                                    value="{{ $alert->is_in_alephoo }}" required>
                             </div>
                         </div>
-                        <div class="form-section">
 
-                            <label class="form-check-label" for="en-uso" style="font-size: 20px"><b>Estados de la
-                                    alerta:</b></label>
-                            <div class="input-group">
+                        <!-- Estados de la alerta -->
+                        <div class="form-section bg-gray-50 p-4 rounded-lg">
+                            <h2 class="text-xl font-bold mb-4">Estados de la alerta</h2>
+                            <div class="div-estados flex flex-row flex-wrap">
                                 @php
                                     $estados = EstadoAlertaModel::getEstadosById($alert->id);
                                 @endphp
-                                <div class="div-estados custom-scrollbar">
-                                    @foreach ($estados as $estado)
-                                        <div class="flex">
-                                            <span
-                                                class="estado px-2 py-1 text-xs font-medium rounded-full {{ match ($estado->estado_id) {
-                                                    1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
-                                                    2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
-                                                    default => 'bg-gray-100 text-gray-800',
-                                                } }}"
-                                                data-id="{{ $estado->estado_id }}">
-                                                {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}
-                                            </span>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                @foreach ($estados as $estado)
+                                    <div>
+                                        <span
+                                            class="estado inline-block px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2 {{ match ($estado->estado_id) {
+                                                1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
+                                                2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
+                                                default => 'bg-gray-100 text-gray-800',
+                                            } }}"
+                                            data-id="{{ $estado->estado_id }}">
+                                            {{ EstadoModel::find($estado->estado_id)->nombre ?? '' }}
+                                        </span>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
 
-                        <div class="buttons_div">
-                            <button type="button" class="btn btn-dark" data-estado="Sin contactar"><i
-                                    class="fa-solid fa-phone-slash"></i> Sin
-                                contactar</button>
-                            <button type="button" class="btn btn-dark" data-estado="Contactado"><i
-                                    class="fa-solid fa-phone-flip"></i> Contactado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Confirmado"><i
-                                    class="fa-solid fa-calendar-check"></i> Confirmado</button>
-                            <button type="button" class="btn btn-dark" data-estado="Rechazado"><i
-                                    class="fa-solid fa-calendar-xmark"></i> Rechazado</button>
-                            <button type="button" class="btn btn-success" data-estado="Completada"
-                                data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fa-solid fa-check"></i>
-                                Completar</button>
+                        <!-- Botones -->
+                        <div
+                            class="buttons_div md:flex-wrap justify-center gap-2 mt-6 whitespace-nowrap text-sm text-center p-3">
+                            <button type="button"
+                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                data-estado="Sin contactar">
+                                <i class="fa-solid fa-phone-slash mr-2"></i> Sin contactar
+                            </button>
+                            <button type="button"
+                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                data-estado="Contactado">
+                                <i class="fa-solid fa-phone-flip mr-2"></i> Contactado
+                            </button>
+                            <button type="button"
+                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                data-estado="Confirmado">
+                                <i class="fa-solid fa-calendar-check mr-2"></i> Confirmado
+                            </button>
+                            <button type="button"
+                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                data-estado="Rechazado">
+                                <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
+                            </button>
+                            <button type="button"
+                                class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                <i class="fa-solid fa-check mr-2"></i> Completar
+                            </button>
                         </div>
-
-
                     </div>
-
                 </form>
             </div>
         </div>
+    </div>
+
 
 </x-app-layout>
 
@@ -519,17 +490,19 @@
                                 case 3:
                                 case 5:
                                 case 8:
+                                case 10:
                                     return 'bg-red-100 text-red-800';
                                 default:
                                     return 'bg-gray-100 text-gray-800';
                             }
                         };
                         const estadoDiv = document.createElement('div');
-                        estadoDiv.className = 'flex';
                         estadoDiv.innerHTML = `
-            <span class="estado px-2 py-1 text-xs font-medium rounded-full ${estadoClass(estadoId)}" data-id="${estadoId}">
+            <span class="estado inline-block px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2 ${estadoClass(estadoId)}" data-id="${estadoId}">
                 ${estadoText}
             </span>`;
+
+
 
                         estadosDiv.appendChild(estadoDiv);
 
