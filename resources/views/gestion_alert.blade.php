@@ -10,10 +10,6 @@
 @endphp
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-    @import 'tailwindcss/base';
-    @import 'tailwindcss/components';
-    @import 'tailwindcss/utilities';
-
     /* Estilos personalizados */
     .custom-scrollbar {
         max-height: 100px;
@@ -40,20 +36,6 @@
             /* Elimina el padding lateral */
     }
 
-    /* Sobrescribir estilos de Tailwind para mantener la estructura deseada */
-    #outer-form .form-section {
-        @apply bg-gray-50 p-4 rounded-lg mb-4 w-full md:w-[48%];
-    }
-
-    #outer-form .input-group {
-        @apply space-y-4;
-    }
-
-    #outer-form .buttons_div {
-        @apply flex flex-row flex-wrap justify-center mt-6 w-full whitespace-nowrap !important;
-
-    }
-
     .buttons_div {
         display: flex;
         flex-direction: row;
@@ -62,28 +44,6 @@
         gap: 1rem;
     }
 
-    /* Estilos para los botones */
-    #outer-form .btn,
-    #outer-form .btn-dark,
-    #outer-form .btn-success {
-        @apply px-4 py-2 rounded text-white transition-colors duration-200 ease-in-out text-center whitespace-nowrap min-w-[150px];
-    }
-
-    #outer-form .btn-dark {
-        @apply bg-gray-800 hover:bg-gray-700;
-    }
-
-    #outer-form .btn-success {
-        @apply bg-green-600 hover:bg-green-700;
-    }
-
-    /* Para dispositivos móviles, ajustar el ancho de los botones para que se envuelvan cada 2 */
-    @media (max-width: 640px) {
-        #outer-form .buttons_div button {
-            @apply w-[calc(50%-1rem)];
-            /* Cada botón ocupa la mitad del espacio con un pequeño margen */
-        }
-    }
 
     /* Estilos para Select2 (si se usa) */
     .select2-container .select2-selection--single {
@@ -101,38 +61,6 @@
 
     /* Media queries para responsividad */
     @media (max-width: 768px) {
-
-        /* Cambiar de filas a columnas en pantallas pequeñas */
-        #outer-form .grid {
-            @apply grid-cols-1 !important;
-        }
-
-        /* Cambiar flex-row a flex-col en dispositivos móviles */
-        #outer-form .flex {
-            @apply flex-col;
-        }
-
-        #outer-form .form-section {
-            @apply w-full;
-        }
-
-        #outer-form .buttons_div {
-            @apply flex-col items-stretch;
-        }
-
-        #outer-form .btn,
-        #outer-form .btn-dark,
-        #outer-form .btn-success {
-            @apply w-full;
-        }
-
-        #outer-form p {
-            @apply text-sm;
-        }
-
-        #outer-form h2 {
-            @apply text-lg;
-        }
 
         .buttons_div button {
             width: calc(50% - 0.5rem);
@@ -411,41 +339,36 @@
             estadosPresentes.add(estadoId);
         });
 
-        const alertDate = new Date(
-            '{{ $alert->fecha_objetivo }}'); // Asegúrate de que esto tenga el formato correcto
-        const currentDate = new Date();
+        const fechaObjetivo = '{{ $alert->fecha_objetivo }}';
 
-        // Comprobar si la fecha ha pasado
-        const hasPassed = alertDate < currentDate;
+        const today = new Date();
+        const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+        const fechaObjetivoMonth = fechaObjetivo.split('-')[1]; // El mes está en la posición 1
 
-        // Verificar si el estado presente incluye el estado 4
-        /*if (estadosPresentes.has(String(4))) {
-            alerts('alert_state_completed');
-            const buttonsDiv = document.querySelector('.buttons_div');
+        // Comprobar si estamos antes de la fecha objetivo
+        const isBeforeAlertDate = fechaObjetivoMonth > todayMonth;
 
-            // Obtiene todos los hijos directos del div y los desactiva
-            const buttons = buttonsDiv.children;
-            Array.from(buttons).forEach(button => {
-                button.setAttribute('disabled', 'true');
-            });
-            return;
-        }*/
-
-        if (estadosPresentes.has(String(4)) || !hasPassed) {
+        // Solo desactivar si la alerta está completada (estado 4) o estamos antes de la fecha objetivo
+        if (isBeforeAlertDate || estadosPresentes.has(String(4))) {
             if (estadosPresentes.has(String(4))) {
-                alerts('alert_state_completed');
-            } else {
-                alerts('alert_state_date_disabled');
+                alerts('alert_state_completed'); // Mostrar alerta de estado completado
+            } else if (isBeforeAlertDate) {
+                alerts(
+                    'alert_state_date_disabled'
+                    ); // Mostrar alerta porque aún no hemos llegado al mes de la fecha objetivo
             }
-            const buttonsDiv = document.querySelector('.buttons_div');
 
-            // Obtiene todos los hijos directos del div y los desactiva
+            // Desactivar los botones
+            const buttonsDiv = document.querySelector('.buttons_div');
             const buttons = buttonsDiv.children;
+
             Array.from(buttons).forEach(button => {
-                button.setAttribute('disabled', 'true');
+                button.setAttribute('disabled', 'true'); // Desactivar todos los botones
             });
-            return;
+
+            return; // Salir de la función
         }
+
 
         buttons.forEach(button => {
             button.addEventListener('click', function() {
@@ -463,8 +386,6 @@
                     ); // Puedes usar una alerta o manejarlo de otra forma
                     return;
                 }
-
-
 
                 // Eliminar el estado que debe ser reemplazado
                 if (estadosToRemove[estadoId]) {
