@@ -1,3 +1,4 @@
+<script src="https://cdn.tailwindcss.com"></script>
 <x-guest-layout>
     <div class=" text-gray-600" style="text-align: center" >
         {{ __('Comuniquese con un administrador') }}

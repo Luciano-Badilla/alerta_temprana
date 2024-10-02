@@ -1,3 +1,4 @@
+<script src="https://cdn.tailwindcss.com"></script>
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -10,16 +11,16 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
             <br>
             <x-input-label for="email" :value="__('Usuario')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="text" name="email" :value="old('email')" required
-                autofocus autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full h-10 p-2 shadow-sm border" type="text" name="email"
+                :value="old('email')" required autofocus autocomplete="username" />
         </div>
 
         <!-- contraseña -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Contraseña')" />
 
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="current-password" />
+            <x-text-input id="password" class="block mt-1 w-full h-10 p-2 shadow-sm border" type="password"
+                name="password" required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -31,7 +32,10 @@
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Recuerdame') }}</span>
             </label>
+
         </div>
+
+
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))

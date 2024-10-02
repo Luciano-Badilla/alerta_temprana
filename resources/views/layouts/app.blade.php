@@ -10,8 +10,11 @@
     <link rel="icon" href="{{ asset('images/hu_icon.png') }}" type="image/x-icon">
 
     <!-- Fonts -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,6 +44,15 @@
     <!-- Custom Styles -->
     <style>
         /* Estilo para el campo de búsqueda */
+        a {
+            text-decoration: none !important;
+            /* Esto afectaría a todos los enlaces */
+        }
+
+        .dropdown-menu {
+            border-radius: 0.5rem !important;
+            /* Ajusta el valor según tus necesidades */
+        }
 
         .search_input {
             margin-left: 5% !important;
@@ -747,14 +759,11 @@
             {{ $slot }}
         </main>
     </div>
-
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bootstrap 4 y 5 (Elige una versión, usualmente no se usan ambas juntas) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <!-- jQuery UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -810,6 +819,7 @@
 
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 
     <footer>
         <script>

@@ -1,3 +1,4 @@
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
     .container {
         padding: 1%;
@@ -320,8 +321,6 @@
         </div>
 
 </x-app-layout>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 

@@ -7,7 +7,7 @@
     use App\Models\TipoModel;
     use Carbon\Carbon;
 @endphp
-
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
     .container {
         padding: 1%;
@@ -144,7 +144,8 @@
                                     <label for="editDNI" class="form-label">DNI:</label>
                                     <div class="input-wrapper">
                                         <input type="text" class="form-control" id="editDNI" name="editDNI"
-                                            value="{{ $persona->documento }}" placeholder="Numero de DNI" required readonly>
+                                            value="{{ $persona->documento }}" placeholder="Numero de DNI" required
+                                            readonly>
                                         <button type="button" class="btn btn-dark" id="searchByDni">
                                             <i id="search_icon" class="fa-solid fa-magnifying-glass"
                                                 style="display: block"></i>

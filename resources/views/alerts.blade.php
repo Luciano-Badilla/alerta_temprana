@@ -341,6 +341,7 @@
 
 @endphp
 
+
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -429,9 +430,11 @@
                                 </div>
                             </div>
                             <div class="search_input_div">
-                                <input type="text" id="search_input"
-                                    class="form-input rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                                    placeholder="Busqueda general" style="margin-top: -5%;">
+                                <div class="mb-3" style="margin-top: -5%;">
+                                    <input type="text" id="search_input" class="form-control custom-height"
+                                        placeholder="Busqueda general">
+                                </div>
+
                             </div>
                         </div>
                         <div class="text-center max-w-md" id="no_alerts" style="margin: 0 auto;">
@@ -566,6 +569,7 @@
     </div>
 
 </x-app-layout>
+
 
 <script>
     $(document).ready(function() {

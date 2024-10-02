@@ -23,7 +23,7 @@
 </style>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
@@ -48,7 +48,7 @@
 
         <div>
             <x-input-label for="name" :value="__('Nombre y Apellido')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full h-10 p-2" :value="old('name', $user->name)"
                 required autofocus autocomplete="name" readonly />
             <p class="mt-1 text-sm text-gray-600">
                 {{ __('Para cambiar el Nombre y Apellido comuniquese con un administrador con el motivo.') }}
@@ -58,7 +58,7 @@
 
         <div>
             <x-input-label for="email" :value="__('Usuario')" />
-            <x-text-input id="email" name="email" type="text" class="mt-1 block w-full" :value="old('email', $user->email)"
+            <x-text-input id="email" name="email" type="text" class="mt-1 block w-full h-10 p-2" :value="old('email', $user->email)"
                 required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 

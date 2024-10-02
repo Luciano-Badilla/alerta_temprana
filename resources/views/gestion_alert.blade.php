@@ -339,14 +339,18 @@
             estadosPresentes.add(estadoId);
         });
 
-        const fechaObjetivo = '{{ $alert->fecha_objetivo }}';
+        const fechaObjetivo = '{{ $alert->fecha_objetivo }}'; // Formato: YYYY-MM-DD
 
         const today = new Date();
-        const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
-        const fechaObjetivoMonth = fechaObjetivo.split('-')[1]; // El mes está en la posición 1
+        const todayYear = today.getFullYear();
+        const todayMonth = today.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+        const fechaObjetivoParts = fechaObjetivo.split('-');
+        const fechaObjetivoYear = parseInt(fechaObjetivoParts[0], 10);
+        const fechaObjetivoMonth = parseInt(fechaObjetivoParts[1], 10); // El mes está en la posición 1
 
-        // Comprobar si estamos antes de la fecha objetivo
-        const isBeforeAlertDate = fechaObjetivoMonth > todayMonth;
+        // Comprobar si estamos antes de la fecha objetivo (mes y año)
+        const isBeforeAlertDate = (fechaObjetivoYear > todayYear) ||
+            (fechaObjetivoYear === todayYear && fechaObjetivoMonth > todayMonth);
 
         // Solo desactivar si la alerta está completada (estado 4) o estamos antes de la fecha objetivo
         if (isBeforeAlertDate || estadosPresentes.has(String(4))) {
@@ -354,8 +358,7 @@
                 alerts('alert_state_completed'); // Mostrar alerta de estado completado
             } else if (isBeforeAlertDate) {
                 alerts(
-                    'alert_state_date_disabled'
-                    ); // Mostrar alerta porque aún no hemos llegado al mes de la fecha objetivo
+                'alert_state_date_disabled'); // Mostrar alerta porque aún no hemos llegado al mes y año de la fecha objetivo
             }
 
             // Desactivar los botones
@@ -368,6 +371,7 @@
 
             return; // Salir de la función
         }
+
 
 
         buttons.forEach(button => {
@@ -422,8 +426,6 @@
             <span class="estado inline-block px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2 ${estadoClass(estadoId)}" data-id="${estadoId}">
                 ${estadoText}
             </span>`;
-
-
 
                         estadosDiv.appendChild(estadoDiv);
 
