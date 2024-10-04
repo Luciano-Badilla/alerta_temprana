@@ -128,6 +128,9 @@
                 <div id="alert_completed" class="alert-warning" style="display: none; text-align: center; padding:2px;">
                     Esta alerta no se puede editar porque se encuentra completada.
                 </div>
+                <div id="alert_actived" class="alert-warning" style="display: none; text-align: center; padding:2px;">
+                    Esta alerta no se puede editar porque se encuentra activa.
+                </div>
 
                 <form id="outer-form" action="{{ route('alert.edit_store') }}" method="POST">
                     @csrf
@@ -356,8 +359,19 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
-    // Convierte los datos a formato JSON y asegúrate de que estén entre comillas
     const estadosDinamicos = @json($estados);
+
+    const fechaObjetivo = "{{ $alert->fecha_objetivo }}"; // Formato: YYYY-MM-DD
+
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+    const fechaObjetivoParts = fechaObjetivo.split('-');
+    const fechaObjetivoYear = parseInt(fechaObjetivoParts[0], 10);
+    const fechaObjetivoMonth = parseInt(fechaObjetivoParts[1], 10); // El mes está en la posición 1
+
+    // Comprobar si estamos en el mismo mes y año de la fecha objetivo
+    const isCurrentMonthAndYear = (fechaObjetivoYear === todayYear && fechaObjetivoMonth === todayMonth);
 
     let completada = false;
 
@@ -368,15 +382,22 @@
         }
     }
 
-    if (completada) {
+    if (completada || isCurrentMonthAndYear) {
         // Selecciona todos los inputs y los desactiva
         document.querySelectorAll('input').forEach(input => input.disabled = true);
         document.querySelectorAll('select').forEach(input => input.disabled = true);
         document.querySelectorAll('textarea').forEach(input => input.disabled = true);
         document.querySelectorAll('button').forEach(input => input.disabled = true);
-        $('#alert_completed').show();
+        if(completada){
+            $('#alert_completed').show();
+        }else{
+            $('#alert_actived').show();
+        }
 
     }
+
+    
+
     tipo = "{{ $alert->tipo_id }}";
     tipo_frecuencia = "{{ $alert->tipo_frecuencia }}";
     frecuencia = "{{ $alert->frecuencia }}";
