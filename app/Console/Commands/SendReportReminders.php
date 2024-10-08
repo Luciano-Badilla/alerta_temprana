@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AlertModel;
 use Carbon\Carbon;
 use App\Mail\ReportReminderMail;
+use App\Models\DatoPersonaModel;
 use App\Models\PersonaAlephooModel;
 use App\Models\PersonaLocalModel;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +28,7 @@ class SendReportReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Enviar recordatorios de reportes vencidos después de 30 días';
+    protected $description = 'Enviar avisos de alerta temprana';
 
     /**
      * Create a new command instance.
@@ -65,9 +66,14 @@ class SendReportReminders extends Command
             // Enviar el correo usando el Mailable creado
             if ($alert->is_in_alephoo == 1) {
                 $email = PersonaAlephooModel::find($alert->persona_id)->contacto_email_direccion;
+                if(!$email){
+                    $dato_persona = DatoPersonaModel::where('tipo_dato','email')->where('persona_id', $alert->persona_id)->first();
+                    $email = $dato_persona->dato;
+                }
             } else {
                 $email = PersonaLocalModel::find($alert->persona_id)->email;
             }
+            log::info($email);
             if ($email) {
                 Mail::to($email)->send(new ReportReminderMail($alert));
                 $estadoNuevo = new EstadoAlertaModel();
@@ -83,7 +89,7 @@ class SendReportReminders extends Command
 
         }
 
-        $this->info('Recordatorios enviados exitosamente.');
+        $this->info('Avisos enviados exitosamente.');
 
         $alertsExpired = AlertModel::join('estado_alerta as ea', 'alertas.id', '=', 'ea.alerta_id')
             ->where('ea.estado_id', 1) // Busca los que tienen estado_id = 1

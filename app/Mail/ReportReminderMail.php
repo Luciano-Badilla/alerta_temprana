@@ -31,6 +31,6 @@ class ReportReminderMail extends Mailable
     public function build()
     {
         return $this->view('emails.report_reminder')
-                    ->subject('Recordatorio de Reporte Vencido');
+                    ->subject('Aviso alerta temprana');
     }
 }
