@@ -275,7 +275,7 @@
                                     <!-- Campo personalizado con opción de unidad -->
                                     <div id="personalizadoMeses" class="mt-2">
                                         <input type="number" class="form-control" id="numPersonalizado"
-                                            name="numPersonalizado" placeholder="Número" min="1">
+                                            name="numPersonalizado" placeholder="Número" min="1" required>
 
                                         <!-- Opciones para especificar unidad -->
                                         <div class="ml-2 mt-1">
@@ -333,7 +333,6 @@
     document.querySelectorAll('input[name="fecha_alert"]').forEach((radio) => {
         radio.addEventListener('change', function() {
             const personalizadoInput = document.getElementById('personalizadoMeses');
-
             if (this.id === 'personalizado') {
                 personalizadoInput.style.display = 'block';
             } else {
