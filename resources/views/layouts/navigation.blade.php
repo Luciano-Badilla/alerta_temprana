@@ -1,6 +1,6 @@
 <style>
     .hu_icon {
-        width: 30%;
+        width: 20%;
     }
 
     /* Personaliza los enlaces en la barra de navegación */
@@ -52,7 +52,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center hu_icon" style="margin-top: -1%">
                     <a href="{{ route('alerts') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-8 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
@@ -64,6 +64,12 @@
 
                     <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')">
                         {{ __('Nueva alerta') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')">
+                        {{ __('Especialidades') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('tiposExamen.create')" :active="request()->routeIs('tiposExamen.create')">
+                        {{ __('Tipos de examen') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -107,6 +113,14 @@
             <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')"
                 class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
                 {{ __('Nueva alerta') }}
+            </x-nav-link>
+            <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')"
+                class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
+                {{ __('Especialidades') }}
+            </x-nav-link>
+            <x-nav-link :href="route('tiposExamen.create')" :active="request()->routeIs('tiposExamen.create')"
+                class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
+                {{ __('Tipos de examen') }}
             </x-nav-link>
         </div>
     </div>

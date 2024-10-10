@@ -11,9 +11,10 @@ class EstadoModel extends Model
 {
     protected $table = 'estados';
 
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'nombre'
     ];
 }
+    

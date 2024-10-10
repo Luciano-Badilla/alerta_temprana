@@ -27,4 +27,9 @@ class AlertModel extends Model
         'tipo_frecuencia',
         'updated_by'
     ];
+
+    public function tiposExamen()
+    {
+        return $this->hasMany(TiposExamenAlertModel::class, 'alert_id');
+    }
 }

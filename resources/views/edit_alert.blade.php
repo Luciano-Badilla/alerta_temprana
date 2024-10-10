@@ -118,6 +118,15 @@
     #personalizadoMeses {
         display: none;
     }
+
+    .select2-selection__choice {
+        background-color: #343a40 !important;
+        /* Cambia el color de fondo */
+        color: #fff !important;
+        /* Cambia el color del texto */
+        border: 1px solid #343a40 !important;
+        /* Borde opcional */
+    }
 </style>
 
 <x-app-layout>
@@ -242,6 +251,14 @@
                                             <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
                                             </option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="editTipoExamen" class="form-label">Tipo de Examen:</label>
+                                    <select class="form-control" id="editTipoExamen" name="editTipoExamen[]" multiple
+                                        required>
+
                                     </select>
                                 </div>
 
@@ -388,15 +405,15 @@
         document.querySelectorAll('select').forEach(input => input.disabled = true);
         document.querySelectorAll('textarea').forEach(input => input.disabled = true);
         document.querySelectorAll('button').forEach(input => input.disabled = true);
-        if(completada){
+        if (completada) {
             $('#alert_completed').show();
-        }else{
+        } else {
             $('#alert_actived').show();
         }
 
     }
 
-    
+
 
     tipo = "{{ $alert->tipo_id }}";
     tipo_frecuencia = "{{ $alert->tipo_frecuencia }}";
@@ -789,6 +806,53 @@
                 }
             });
 
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Inicializa Select2
+        $('#editTipoExamen').select2();
+
+        const tiposExamen = @json($tiposExamen); // Tipos de examen disponibles
+        const tipoExamenSelected = @json($tiposExamenSelected); // Tipos de examen seleccionados
+
+        // Extrae solo los tipo_examen_id de tipoExamenSelected
+        const selectedTipoExamenIds = tipoExamenSelected.map(tipo => tipo.tipo_examen_id);
+
+        function loadTiposExamen(selectedEspecialidad) {
+            const tipoExamenSelect = $('#editTipoExamen');
+
+            // Elimina todas las opciones actuales
+            tipoExamenSelect.empty();
+
+            // Filtra y agrega las opciones correspondientes a la especialidad seleccionada
+            const filteredTiposExamen = tiposExamen.filter(tipo => tipo.especialidad_id ==
+                selectedEspecialidad);
+
+            $.each(filteredTiposExamen, function(index, tipo) {
+                tipoExamenSelect.append(new Option(tipo.nombre, tipo.id, false,
+                    false)); // Agrega la opción
+            });
+
+            // Actualiza Select2 para mostrar los nuevos elementos
+            tipoExamenSelect.select2();
+
+            // Selecciona las opciones que están en selectedTipoExamenIds
+            tipoExamenSelect.val(selectedTipoExamenIds).trigger('change'); // Selecciona las opciones
+        }
+
+        // Cargar los tipos de examen cuando cambia la especialidad
+        $('#editEspecialidad').on('change', function() {
+            const selectedEspecialidad = $(this).val();
+            loadTiposExamen(selectedEspecialidad);
+        });
+
+        // Cargar los tipos de examen al cargar la página si hay una especialidad seleccionada
+        const initialEspecialidad = $('#editEspecialidad').val();
+        if (initialEspecialidad) {
+            loadTiposExamen(initialEspecialidad);
         }
     });
 </script>

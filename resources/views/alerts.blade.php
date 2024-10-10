@@ -431,7 +431,7 @@
                             </div>
                             <div class="search_input_div">
                                 <div class="mb-3" style="margin-top: -5%;">
-                                    <input type="text" id="search_input" class="form-control custom-height"
+                                    <input type="text" id="search_input" class="form-control custom-height" style="border-radius: 15px"
                                         placeholder="Busqueda general">
                                 </div>
 
@@ -483,6 +483,23 @@
                                             <h3 class="font-semibold text-gray-700 especialidad">
                                                 {{ EspecialidadModel::find($alert->especialidad_id)->nombre ?? '' }}
                                             </h3>
+                                            <div class="flex-1">
+                                                <label class="block text-sm font-medium text-gray-700">Tipos de
+                                                    examen:</label>
+                                                <div class="div-estados flex flex-row flex-wrap">
+                                                    @foreach ($tiposExamenSelected as $tipoExamen)
+                                                        @if ($tipoExamen->alert_id === $alert->id)
+                                                            <div>
+                                                                <span
+                                                                    class="estado inline-block px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2 text-white"
+                                                                    style="background-color: #343a40">
+                                                                    {{ $tipoExamen->tipoExamen->nombre }}
+                                                                </span>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
                                             <div
                                                 class="h-24 overflow-y-auto p-2 bg-gray-50 rounded-md custom-scrollbar">
                                                 <p class="text-sm text-gray-600">{{ $alert->detalle }}</p>

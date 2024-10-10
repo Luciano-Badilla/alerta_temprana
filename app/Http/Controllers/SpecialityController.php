@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EstadoModel;
 use App\Models\PersonaAlephooModel;
 use App\Models\PersonaLocalModel;
 use App\Models\AlertModel;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class AlertController extends Controller
+class SpecialityController extends Controller
 {
     //
 
@@ -24,7 +25,7 @@ class AlertController extends Controller
         $especialidades = EspecialidadModel::all();
         $especialidadPrincipal = Auth::user()->especialidad_id;
         $tiposExamen = TiposExamenModel::all();
-        return view('create_alert', [
+        return view('especialidades', [
             'especialidades' => $especialidades,
             'especialidadPrincipal' => $especialidadPrincipal,
             'tiposExamen' => $tiposExamen
@@ -33,98 +34,12 @@ class AlertController extends Controller
 
     public function store(Request $request)
     {
-        $is_in_alephoo = $request->input('is_in_alephoo');
-
-        if ($is_in_alephoo) {
-            $persona = PersonaAlephooModel::find($request->input('addId'));
-        } else {
-            $persona = PersonaLocalModel::getPersonalDataByDNIObject($request->input('addDNI'));
-
-            if ($persona) {
-                $persona->nombres = $request->input('addNombre');
-                $persona->apellidos = $request->input('addApellido');
-                $persona->fecha_nacimiento = $request->input('addFechaNac');
-                $persona->celular = $request->input('addCelular');
-                $persona->email = $request->input('addEmail');
-                $persona->documento = $request->input('addDNI');
-                $persona->update();
-            } else {
-                $persona = new PersonaLocalModel();
-                $persona->nombres = $request->input('addNombre');
-                $persona->apellidos = $request->input('addApellido');
-                $persona->fecha_nacimiento = $request->input('addFechaNac');
-                $persona->celular = $request->input('addCelular');
-                $persona->email = $request->input('addEmail');
-                $persona->documento = $request->input('addDNI');
-                $persona->save();
-            }
-        }
-
-        $alert = new AlertModel();
-        $alert->persona_id = $persona->id;
-        $alert->especialidad_id = $request->input('addEspecialidad');
-        $alert->detalle = $request->input('addDetalle');
-        switch ($request->input('fecha_alert')) {
-            case '6meses':
-                $alert->fecha_objetivo = Carbon::now()->addMonths(6);
-                $alert->tipo_frecuencia = "meses";
-                $alert->frecuencia = intval(6);
-                break;
-
-            case '1anio':
-                $alert->fecha_objetivo = Carbon::now()->addYear();
-                $alert->tipo_frecuencia = "anios";
-                $alert->frecuencia = intval(1);
-                break;
-
-            case '2anios':
-                $alert->fecha_objetivo = Carbon::now()->addYears(2);
-                $alert->tipo_frecuencia = "anios";
-                $alert->frecuencia = intval(2);
-                break;
-
-            case '5anios':
-                $alert->fecha_objetivo = Carbon::now()->addYears(5);
-                $alert->tipo_frecuencia = "anios";
-                $alert->frecuencia = intval(5);
-                break;
-
-            case 'personalizado':
-                // Asumimos que 'numPersonalizado' y 'unidadPersonalizado' están correctamente establecidos
-                $numero = intval($request->input('numPersonalizado'));
-                $unidad = $request->input('unidadPersonalizado');
-
-                if ($unidad === 'meses') {
-                    $alert->fecha_objetivo = Carbon::now()->addMonths($numero);
-                } elseif ($unidad === 'anios') {
-                    $alert->fecha_objetivo = Carbon::now()->addYears($numero);
-                }
-                $alert->frecuencia = intval($request->input('numPersonalizado'));
-                $alert->tipo_frecuencia = $unidad;
-                break;
-
-            default:
-                // Manejar otros casos si es necesario
-                break;
-        }
-        $alert->tipo_id = $request->input('tipo_alerta');
-        $alert->is_in_alephoo = $is_in_alephoo;
-        $alert->created_by = Auth::user()->name;
-        $alert->save();
-
-        foreach ($request->input('addTipoExamen') as $tipoExamen) {
-            $relacion = new TiposExamenAlertModel();
-            $relacion->tipo_examen_id = $tipoExamen;
-            $relacion->alert_id = $alert->id;
-            $relacion->save();
-        }
-
-        $estado = new EstadoAlertaModel();
-        $estado->alerta_id = $alert->id;
-        $estado->estado_id = 1;
+        log::info("asdasdasdsd");
+        $estado = New EspecialidadModel();
+        $estado->nombre = $request->input('addNombre');
         $estado->save();
 
-        return redirect()->route('alerts')->with('success', 'Alerta creada correctamente.');
+        return redirect()->route('especialidad.create')->with('success', 'Especialidad creada correctamente.');
     }
 
     public function store2(Request $request)

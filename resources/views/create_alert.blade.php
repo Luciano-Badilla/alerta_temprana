@@ -1,4 +1,4 @@
-<script src="https://cdn.tailwindcss.com"></script>
+
 <style>
     .container {
         padding: 1%;
@@ -108,6 +108,16 @@
 
     #personalizadoMeses {
         display: none;
+    }
+
+    /* Estilo para las etiquetas de items seleccionados */
+    .select2-selection__choice {
+        background-color: #343a40 !important;
+        /* Cambia el color de fondo */
+        color: #fff !important;
+        /* Cambia el color del texto */
+        border: 1px solid #343a40 !important;
+        /* Borde opcional */
     }
 </style>
 
@@ -229,6 +239,14 @@
                                 </div>
 
                                 <div>
+                                    <label for="addTipoExamen" class="form-label">Tipo de Examen:</label>
+                                    <select class="form-control" id="addTipoExamen" name="addTipoExamen[]" multiple
+                                        required>
+
+                                    </select>
+                                </div>
+
+                                <div>
                                     <label for="addDetalle" class="form-label">Detalle:</label>
                                     <textarea class="form-control" id="addDetalle" name="addDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
@@ -275,7 +293,7 @@
                                     <!-- Campo personalizado con opción de unidad -->
                                     <div id="personalizadoMeses" class="mt-2">
                                         <input type="number" class="form-control" id="numPersonalizado"
-                                            name="numPersonalizado" placeholder="Número" min="1" required>
+                                            name="numPersonalizado" placeholder="Número" min="1">
 
                                         <!-- Opciones para especificar unidad -->
                                         <div class="ml-2 mt-1">
@@ -309,7 +327,7 @@
 
 
                             </div>
-                            <div style="text-align: right;">
+                            <div style="text-align: right;" class="mt-auto">
                                 <button type="submit" class="btn btn-dark">Agendar alerta</button>
                             </div>
 
@@ -335,10 +353,14 @@
             const personalizadoInput = document.getElementById('personalizadoMeses');
             if (this.id === 'personalizado') {
                 personalizadoInput.style.display = 'block';
+                $('#numPersonalizado').attr('required', true);
             } else {
                 personalizadoInput.style.display = 'none';
+                $('#numPersonalizado').attr('required', false);
                 personalizadoInput.value = ''; // Limpiar el campo si se selecciona otra opción
             }
+
+            
         });
     });
 
@@ -353,9 +375,10 @@
 
 
     $(document).ready(function() {
-
+        $('#addTipoExamen').select2();
         $('#addEspecialidad').val("{{ $especialidadPrincipal }}");
         $('#addEspecialidad').select2();
+        $('#addEspecialidad').trigger('change');
 
         // Ajuste de altura después de un pequeño retraso
         setTimeout(function() {
@@ -685,6 +708,45 @@
                 }
             });
 
+        }
+    });
+
+    $(document).ready(function() {
+        // Inicializa Select2
+        $('#addTipoExamen').select2();
+
+        const tiposExamen =
+            @json($tiposExamen); // Asumiendo que tienes los tipos de examen disponibles en un array de PHP
+
+        function loadTiposExamen(selectedEspecialidad) {
+            const tipoExamenSelect = $('#addTipoExamen');
+
+            // Elimina todas las opciones actuales
+            tipoExamenSelect.empty();
+
+            // Filtra y agrega las opciones correspondientes a la especialidad seleccionada
+            const filteredTiposExamen = tiposExamen.filter(tipo => tipo.especialidad_id ==
+                selectedEspecialidad);
+
+            $.each(filteredTiposExamen, function(index, tipo) {
+                tipoExamenSelect.append(new Option(tipo.nombre, tipo.id, false,
+                    false)); // Agrega la opción
+            });
+
+            // Actualiza Select2 para mostrar los nuevos elementos
+            tipoExamenSelect.select2();
+        }
+
+        // Cargar los tipos de examen cuando cambia la especialidad
+        $('#addEspecialidad').on('change', function() {
+            const selectedEspecialidad = $(this).val();
+            loadTiposExamen(selectedEspecialidad);
+        });
+
+        // Cargar los tipos de examen al cargar la página si hay una especialidad seleccionada
+        const initialEspecialidad = $('#addEspecialidad').val();
+        if (initialEspecialidad) {
+            loadTiposExamen(initialEspecialidad);
         }
     });
 </script>

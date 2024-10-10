@@ -3,7 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GestAlertsController;
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\SpecialityController;
+use App\Http\Controllers\TypeExamController;
 use Illuminate\Support\Facades\Route;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 ///////////////////////////
 
@@ -54,15 +57,33 @@ Route::post('/alerts/gest_alert', [AlertController::class, 'completed'])
     ->middleware(['auth', 'verified'])
     ->name('alert.completed');
 
-
 Route::post('/estado/agregar', [AlertController::class, 'agregarEstado'])->name('estado.agregar');
 Route::post('/estado/eliminar', [AlertController::class, 'eliminarEstado'])->name('estado.eliminar');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/especialidades/create_specialty', [SpecialityController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('especialidad.create');
+
+Route::get('/tiposExamen/create_tipoExamen', [TypeExamController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('tiposExamen.create');
+
+Route::post('/especialidades/create_specialty', [SpecialityController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('especialidad.store');
+
+Route::post('/especialidades/edit_specialty', [SpecialityController::class, 'edit'])
+    ->middleware(['auth', 'verified'])
+    ->name('especialidad.edit');
+
+Route::post('/especialidades/delete_specialty', [SpecialityController::class, 'delete'])
+    ->middleware(['auth', 'verified'])
+    ->name('especialidad.delete');
 
 require __DIR__ . '/auth.php';
