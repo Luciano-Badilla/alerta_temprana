@@ -1,114 +1,49 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 <x-app-layout>
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="addExamenModal" tabindex="-1" aria-labelledby="addExamenModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">especialidades</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="addExamenModalLabel">
+                        <i class="fas fa-file-medical me-2"></i>Agregar nuevo examen
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Aqui debes agregar los especialidades donde se encuentran las PCs.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Agregar nueva especialidad</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('especialidad.store') }}" method="POST" id="addModal"
-                        style="display: flex; flex-direction: row; gap: 20px;">
+                    <form action="{{ route('examen.store') }}" method="POST" id="addModal">
                         @csrf
-                        <!-- Mostrar errores de validación generales -->
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="addNombre" class="form-label">Especialidad:</label>
-                            <input type="text" id="addNombre" name="addNombre" required
-                                class="block w-full px-2 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 @error('addNombre') border-red-500 @enderror">
-
+                        <input type="hidden" id="especialidadId" name="especialidad_id" value="">
+                        <div class="mb-4">
+                            <label for="addNombre" class="form-label text-dark fw-bold">Nombre del examen:</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-stethoscope text-dark"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" id="addNombre"
+                                    name="addNombre" required placeholder="Ingrese el nombre del examen">
+                            </div>
                         </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-dark">Agregar</button>
+                        @error('addNombre')
+                            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <div>
+                                    {{ $message }}
+                                </div>
+                            </div>
+                        @enderror
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Editar especialidad</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" form="addModal" class="btn btn-dark">
+                        <i class="fas fa-plus me-1"></i>Agregar
+                    </button>
                 </div>
-                <div class="modal-body">
-                    <form action="{{ route('especialidad.edit') }}" method="POST" id="addModal">
-                        @method('PATCH')
-                        @csrf
-                        <!-- Mostrar errores de validación generales -->
-
-                        <div class="mb-3" style="flex: 1;">
-                            <input type="hidden" id="editId" name="editId">
-                            <label for="editNombre" class="form-label">especialidad:</label>
-                            <input type="text" class="form-control @error('editNombre') is-invalid @enderror"
-                                id="editNombre" name="editNombre" style="border: 1px solid gray; border-radius: 5px;"
-                                required>
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="editMotivo" class="form-label">Motivo:</label>
-                            <input type="text" class="form-control @error('editMotivo') is-invalid @enderror"
-                                id="editMotivo" name="editMotivo" style="border: 1px solid gray; border-radius: 5px;"
-                                required>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-dark">Editar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">¿Seguro?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('especialidad.delete') }}" method="POST" id="addModal">
-                        @csrf
-                        <!-- Mostrar errores de validación generales -->
-
-                        <div class="mb-3">
-                            <input type="hidden" id="deleteId" name="deleteId">
-                            <label for="removeMotivo" class="form-label">Motivo:</label>
-                            <input type="text" class="form-control @error('removeMotivo') is-invalid @enderror"
-                                id="removeMotivo" name="removeMotivo"
-                                style="border: 1px solid gray; border-radius:5px" required>
-                        </div>
-                        <p
-                            style="color: #d9534f; background-color: #f9e2e2; border: 1px solid #d43f3a; padding: 10px; border-radius: 5px;">
-                            Todos los componentes asociados a este especialidad se desvincularan del mismo.
-                        </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal"
-                        aria-label="Close">No</button>
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </div>
-
             </div>
         </div>
     </div>
@@ -126,6 +61,11 @@
                         <p style="padding: 0.3%; text-align: center">{{ session('success') }}</p>
                     </div>
                 @endif
+                @if (session('warning'))
+                    <div class="alert-warning">
+                        <p style="padding: 0.3%; text-align: center">{{ session('warning') }}</p>
+                    </div>
+                @endif
                 <div class="p-3 rounded">
                     <div class="container mx-auto p-4">
                         <div class="mb-4 flex flex-col gap-1">
@@ -135,7 +75,7 @@
                                 <div class="flex flex-col sm:flex-row gap-2">
                                     <input type="text" id="addNombre" placeholder="Nombre de la especialidad"
                                         class="border border-gray-300 rounded-lg p-2 flex-grow sm:max-w-60 max-w-full"
-                                        name="addNombre">
+                                        name="addNombre" required>
                                     <button type="submit"
                                         class="bg-gray-800 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center justify-center">
                                         <i class="ri-add-line mr-2 max-w-auto"></i> Agregar
@@ -148,44 +88,63 @@
                             @foreach ($especialidades as $especialidad)
                                 <div class="bg-white p-4 rounded-lg shadow flex flex-col">
                                     <h2 class="text-lg font-bold mb-2 text-gray-800">{{ $especialidad->nombre }}</h2>
-                                    <ul class="list-none pl-0 mb-4 flex-grow" id="listaExamenes">
-                                        @foreach ($tiposExamen as $tipoExamen)
-                                            @if ($tipoExamen->especialidad_id == $especialidad->id)
-                                                <li class="flex justify-between items-center text-gray-600 py-1">
-                                                    {{ $tipoExamen->nombre }}
-                                                    <button onclick=""
-                                                        class="text-gray-600 hover:text-gray-800 transition duration-300"
-                                                        aria-label="Eliminar {{ $tipoExamen->nombre }}">
-                                                        <i class="ri-close-line"></i>
-                                                    </button>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                    <button type="submit"
-                                        class="bg-gray-800 text-white py-2 rounded-lg transition duration-300 w-full flex items-center justify-center mt-auto">
+                                    <div class="flex flex-col mb-4" style="gap: 4px; margin: 0;" id="listaExamenes">
+                                        <!-- Aumentar el gap -->
+                                        @php
+                                            // Filtrar los tipos de examen por la especialidad actual
+                                            $examenesEspecialidad = $tiposExamen->filter(function ($tipoExamen) use (
+                                                $especialidad,
+                                            ) {
+                                                return $tipoExamen->especialidad_id == $especialidad->id;
+                                            });
+                                        @endphp
+
+                                        @if ($examenesEspecialidad->isEmpty())
+                                            <p class="bg-gray-100 p-2 rounded-lg text-center">No hay tipos de examen disponibles para esta especialidad.</p>
+                                        @else
+                                            @foreach ($examenesEspecialidad as $tipoExamen)
+                                                <form action="{{ route('examen.alter') }}" method="POST"
+                                                    style="margin: 0;">
+                                                    @csrf
+                                                    <div
+                                                        class="flex justify-between items-center text-gray-600 py-1 px-1 rounded-2xl hover:bg-gray-100">
+                                                        @if ($tipoExamen->borrado_logico == 0)
+                                                            <!-- Examen no borrado -->
+                                                            {{ $tipoExamen->nombre }}
+                                                            <input type="hidden" id="examen_id" name="examen_id"
+                                                                value="{{ $tipoExamen->id }}">
+                                                            <button type="submit"
+                                                                class="text-gray-600 hover:text-gray-800 transition duration-300"
+                                                                aria-label="Eliminar {{ $tipoExamen->nombre }}">
+                                                                <i class="fa-solid fa-ban"></i>
+                                                            </button>
+                                                        @else
+                                                            <!-- Examen borrado lógicamente -->
+                                                            <s>{{ $tipoExamen->nombre }}</s>
+                                                            <input type="hidden" id="examen_id" name="examen_id"
+                                                                value="{{ $tipoExamen->id }}">
+                                                            <button type="submit"
+                                                                class="text-gray-600 hover:text-gray-800 transition duration-300"
+                                                                aria-label="Reactivar {{ $tipoExamen->nombre }}">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                </form>
+                                            @endforeach
+                                        @endif
+
+                                    </div>
+                                    <button type="button"
+                                        class="bg-gray-800 text-white py-2 rounded-lg transition duration-300 w-full flex items-center justify-center mt-auto"
+                                        data-id="{{ $especialidad->id }}" data-bs-toggle="modal"
+                                        data-bs-target="#addExamenModal">
                                         <i class="ri-add-line mr-2"></i> Agregar Examen
                                     </button>
                                 </div>
                             @endforeach
                         </div>
-                    </div>
 
-                    <div id="modalAgregarExamen"
-                        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-                        <div class="bg-white p-4 rounded-lg shadow-lg w-11/12 sm:w-96">
-                            <h2 id="modalTitle" class="text-lg font-bold mb-4 text-gray-800">Agregar Examen</h2>
-                            <input type="text" id="nuevoExamen" placeholder="Nuevo examen"
-                                class="border border-gray-300 rounded-lg px-2 py-1 mb-4 w-full">
-                            <div class="flex justify-end gap-2">
-                                <button onclick="cerrarModal()"
-                                    class="bg-gray-300 text-gray-700 px-4 py-1 rounded hover:bg-gray-400 transition duration-300">Cancelar</button>
-                                <button onclick="agregarExamen()"
-                                    class="bg-gray-800 text-white px-4 py-1 rounded hover:bg-gray-700 transition duration-300 flex items-center">
-                                    <i class="ri-add-line mr-2"></i> Agregar
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -206,4 +165,15 @@
             row.style.display = rowText.includes(searchText) ? '' : 'none';
         });
     });*/
+
+    const addExamenModal = document.getElementById('addExamenModal');
+    addExamenModal.addEventListener('show.bs.modal', function(event) {
+        // Botón que activó el modal
+        const button = event.relatedTarget;
+        // Extrae el data-id del botón
+        const especialidadId = button.getAttribute('data-id');
+        // Asigna el valor al campo oculto en el modal
+        const inputEspecialidadId = document.getElementById('especialidadId');
+        inputEspecialidadId.value = especialidadId;
+    });
 </script>

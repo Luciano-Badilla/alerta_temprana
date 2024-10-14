@@ -68,9 +68,6 @@
                     <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')">
                         {{ __('Especialidades') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tiposExamen.create')" :active="request()->routeIs('tiposExamen.create')">
-                        {{ __('Tipos de examen') }}
-                    </x-nav-link>
                 </div>
             </div>
 
@@ -117,10 +114,6 @@
             <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')"
                 class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
                 {{ __('Especialidades') }}
-            </x-nav-link>
-            <x-nav-link :href="route('tiposExamen.create')" :active="request()->routeIs('tiposExamen.create')"
-                class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
-                {{ __('Tipos de examen') }}
             </x-nav-link>
         </div>
     </div>

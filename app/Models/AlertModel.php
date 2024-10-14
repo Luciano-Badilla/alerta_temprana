@@ -30,6 +30,6 @@ class AlertModel extends Model
 
     public function tiposExamen()
     {
-        return $this->hasMany(TiposExamenAlertModel::class, 'alert_id');
+        return $this->hasMany(ExamenAlertModel::class, 'alert_id');
     }
 }

@@ -8,8 +8,8 @@ use App\Models\AlertModel;
 use App\Models\DatoPersonaModel;
 use App\Models\EspecialidadModel;
 use App\Models\EstadoAlertaModel;
-use App\Models\TiposExamenAlertModel;
-use App\Models\TiposExamenModel;
+use App\Models\ExamenAlertModel;
+use App\Models\ExamenModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class AlertController extends Controller
     {
         $especialidades = EspecialidadModel::all();
         $especialidadPrincipal = Auth::user()->especialidad_id;
-        $tiposExamen = TiposExamenModel::all();
+        $tiposExamen = ExamenModel::where('borrado_logico', 0)->get();
         return view('create_alert', [
             'especialidades' => $especialidades,
             'especialidadPrincipal' => $especialidadPrincipal,
@@ -113,7 +113,7 @@ class AlertController extends Controller
         $alert->save();
 
         foreach ($request->input('addTipoExamen') as $tipoExamen) {
-            $relacion = new TiposExamenAlertModel();
+            $relacion = new ExamenAlertModel();
             $relacion->tipo_examen_id = $tipoExamen;
             $relacion->alert_id = $alert->id;
             $relacion->save();
@@ -209,8 +209,8 @@ class AlertController extends Controller
     {
         $alert = AlertModel::find($id);
         $estados = EstadoAlertaModel::getEstadosById($id);
-        $tiposExamen = TiposExamenModel::all();
-        $tiposExamenSelected = TiposExamenAlertModel::all()->where("alert_id", $id);
+        $tiposExamen = ExamenModel::all();
+        $tiposExamenSelected = ExamenAlertModel::all()->where("alert_id", $id);
 
         if ($alert->is_in_alephoo) {
             $personaAlephoo = new PersonaAlephooModel();
@@ -311,14 +311,14 @@ class AlertController extends Controller
         $alert->is_in_alephoo = $is_in_alephoo;
         $alert->updated_by = Auth::user()->name;
 
-        $oldRelation = TiposExamenAlertModel::where('alert_id', $request->input("editAlertId"))->get(); // Obtén la colección
+        $oldRelation = ExamenAlertModel::where('alert_id', $request->input("editAlertId"))->get(); // Obtén la colección
 
         foreach ($oldRelation as $item) {
             $item->delete(); // Elimina cada modelo individualmente
         }
 
         foreach ($request->input('editTipoExamen') as $tipoExamen) {
-            $relacion = new TiposExamenAlertModel();
+            $relacion = new ExamenAlertModel();
             $relacion->tipo_examen_id = $tipoExamen;
             $relacion->alert_id = $alert->id;
             $relacion->save();
@@ -332,7 +332,7 @@ class AlertController extends Controller
     public function gest_index($id)
     {
         $alert = AlertModel::find($id);
-        $tiposExamenSelected = TiposExamenAlertModel::with(['alerta', 'tipoExamen'])
+        $tiposExamenSelected = ExamenAlertModel::with(['alerta', 'tipoExamen'])
             ->where('alert_id', $id)
             ->get();
 

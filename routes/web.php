@@ -3,8 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GestAlertsController;
 use App\Http\Controllers\AlertController;
-use App\Http\Controllers\SpecialityController;
-use App\Http\Controllers\TypeExamController;
+use App\Http\Controllers\EspecialidadController;
+use App\Http\Controllers\ExamenController;
 use Illuminate\Support\Facades\Route;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -66,23 +66,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/especialidades/create_specialty', [SpecialityController::class, 'index'])
+Route::get('/especialidades/create_especialidad', [EspecialidadController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('especialidad.create');
 
-Route::get('/tiposExamen/create_tipoExamen', [TypeExamController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('tiposExamen.create');
-
-Route::post('/especialidades/create_specialty', [SpecialityController::class, 'store'])
+Route::post('/especialidades/create_especialidad', [EspecialidadController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('especialidad.store');
 
-Route::post('/especialidades/edit_specialty', [SpecialityController::class, 'edit'])
+Route::post('/examenes/create_examen', [ExamenController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('examen.store');
+Route::post('/examenes/alter_examen', [ExamenController::class, 'alter_borrado_logico'])
+    ->middleware(['auth', 'verified'])
+    ->name('examen.alter');
+
+Route::post('/especialidades/edit_specialty', [EspecialidadController::class, 'edit'])
     ->middleware(['auth', 'verified'])
     ->name('especialidad.edit');
 
-Route::post('/especialidades/delete_specialty', [SpecialityController::class, 'delete'])
+Route::post('/especialidades/delete_specialty', [EspecialidadController::class, 'delete'])
     ->middleware(['auth', 'verified'])
     ->name('especialidad.delete');
 
