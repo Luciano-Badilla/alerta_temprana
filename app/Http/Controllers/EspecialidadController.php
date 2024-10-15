@@ -34,6 +34,12 @@ class EspecialidadController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'addNombre' => 'required|unique:especialidad,nombre'
+        ],[
+            'addNombre.unique' => 'La especialidad '.$request->input('addNombre').' ya existe.'
+        ]);
+
         $estado = new EspecialidadModel();
         $estado->nombre = $request->input('addNombre');
         $estado->save();

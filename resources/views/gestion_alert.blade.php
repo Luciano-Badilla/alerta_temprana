@@ -90,22 +90,33 @@
     </x-slot>
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">¿Completar alerta?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content" style="border-radius: 8px !important">
+                <div class="modal-header border-transparent">
+                    <div class="flex flex-col">
+                        <h5 class="modal-title" id="exampleModalLabel">¿Completar alerta?</h5>
+                        <p class="text-muted">Esta acción marcará la alerta médica como completada.</p>
+                    </div>
+                    <button type="button" class="btn-close text-sm" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="flex flex-col gap-2">
-                        <p class="alert alert-danger">Al completar la alerta se marcara como completada y ya no se podra
-                            gestionar.</p>
-                        <button type="button" id="submit_form" class="btn btn-success">Completar alerta</button>
+                <div class="modal-body border-transparent">
+                    <div class="py-2 px-3 text-red-600 d-flex align-items-center" role="alert"
+                        style="border: solid #EF4444; border-radius: 8px; border-width: 1px; margin-top:-5%">
+                        <i class="fa-solid fa-triangle-exclamation mr-2" style="color:#EF4444"></i>
+                        <div>Al completar la alerta se marcará como completada y ya no se podrá gestionar.</div>
                     </div>
                 </div>
-
+                <div class="modal-footer border-transparent">
+                    <button type="button" class="btn"
+                        style="border: solid gray; border-radius: 8px; border-width: 1px;"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="submit_form" class="btn btn-danger"
+                        style="border-radius: 8px !important">Completar alerta</button>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto rounded-lg">
 
@@ -169,7 +180,7 @@
                                 <div class="flex flex-col md:flex-row md:space-x-4">
                                     <div class="flex-1">
                                         <label class="block text-sm font-medium text-gray-700">Tipos de examen:</label>
-                                        <div class="div-estados flex flex-row flex-wrap">
+                                        <div class="div-examenes flex flex-row flex-wrap">
                                             @foreach ($tiposExamenSelected as $tipoExamen)
                                                 <div>
                                                     <span
@@ -302,6 +313,11 @@
                                 data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
                                 <i class="fa-solid fa-check mr-2"></i> Completar
                             </button>
+                            <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
+                                class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                data-estado="Completada">
+                                <i class="fa-solid fa-check mr-2"></i> Generar pedido medico <i class="fa-solid fa-file-pdf"></i>
+                            </a>
                         </div>
                     </div>
                 </form>

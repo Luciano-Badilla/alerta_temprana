@@ -5,6 +5,7 @@ use App\Http\Controllers\GestAlertsController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\EspecialidadController;
 use App\Http\Controllers\ExamenController;
+use App\Http\Controllers\PDFController;
 use Illuminate\Support\Facades\Route;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -88,5 +89,10 @@ Route::post('/especialidades/edit_specialty', [EspecialidadController::class, 'e
 Route::post('/especialidades/delete_specialty', [EspecialidadController::class, 'delete'])
     ->middleware(['auth', 'verified'])
     ->name('especialidad.delete');
+
+Route::get('/generate_pdf/{id}', [PDFController::class, 'generate'])
+    ->middleware(['auth', 'verified'])
+    ->name('generate.pdf');
+
 
 require __DIR__ . '/auth.php';

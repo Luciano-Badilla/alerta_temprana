@@ -51,11 +51,16 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white  overflow-hidden sm:rounded-lg">
-                @error('addNombre')
+                @if ($errors->any())
                     <div class="alert-danger" style="text-align: center">
-                        {{ $message }}
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                @enderror
+                @endif
+                
                 @if (session('success'))
                     <div class="alert-success">
                         <p style="padding: 0.3%; text-align: center">{{ session('success') }}</p>
@@ -100,7 +105,8 @@
                                         @endphp
 
                                         @if ($examenesEspecialidad->isEmpty())
-                                            <p class="bg-gray-100 p-2 rounded-lg text-center">No hay tipos de examen disponibles para esta especialidad.</p>
+                                            <p class="bg-gray-100 p-2 rounded-lg text-center">No hay tipos de examen
+                                                disponibles para esta especialidad.</p>
                                         @else
                                             @foreach ($examenesEspecialidad as $tipoExamen)
                                                 <form action="{{ route('examen.alter') }}" method="POST"

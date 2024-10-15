@@ -431,7 +431,7 @@
                             </div>
                             <div class="search_input_div">
                                 <div class="mb-3" style="margin-top: -5%;">
-                                    <input type="text" id="search_input" class="form-control custom-height" style="border-radius: 15px"
+                                    <input type="text" id="search_input" class="form-control custom-height" style="border-radius: 8px"
                                         placeholder="Busqueda general">
                                 </div>
 
@@ -486,7 +486,7 @@
                                             <div class="flex-1">
                                                 <label class="block text-sm font-medium text-gray-700">Tipos de
                                                     examen:</label>
-                                                <div class="div-estados flex flex-row flex-wrap">
+                                                <div class="div-examenes flex flex-row flex-wrap">
                                                     @foreach ($tiposExamenSelected as $tipoExamen)
                                                         @if ($tipoExamen->alert_id === $alert->id)
                                                             <div>

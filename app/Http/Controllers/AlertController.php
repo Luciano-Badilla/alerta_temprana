@@ -462,6 +462,6 @@ class AlertController extends Controller
         }
 
 
-        return redirect()->route('alerts')->with('success', 'Alerta completada correctamente.');
+        return redirect()->route('alerts')->with('success', 'Alerta Nº: '.$id.' completada correctamente.');
     }
 }
