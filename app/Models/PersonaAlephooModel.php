@@ -15,6 +15,10 @@ class PersonaAlephooModel extends Model
     {
         return response()->json(DB::connection('db2') // Asegúrate de usar la conexión 'db2'
             ->table('persona as p')
+            ->leftJoin('persona_usuario_portal as pup', 'pup.persona_id', '=', 'p.id')
+            ->leftJoin('turno_programado as tp', 'tp.persona_id', '=', 'p.id')
+            ->leftJoin('plan as pl', 'tp.plan_id', '=', 'pl.id')
+            ->leftJoin('obra_social as os', 'pl.obra_social_id', '=', 'os.id')
             ->select(
                 'p.id',
                 'p.documento',
@@ -22,18 +26,24 @@ class PersonaAlephooModel extends Model
                 'p.nombres',
                 'p.fecha_nacimiento',
                 DB::raw("CONCAT('+',COALESCE(CAST(p.contacto_celular_prefijo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
-                'p.contacto_email_direccion as email'
+                             COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
+                             COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
+                'p.contacto_email_direccion as email',
+                'os.nombre as obra_social' // Agregamos la obra social
             )
             ->where('p.documento', $dni)
             ->first());
     }
 
+
     public static function getPersonalDataById($id)
     {
         return response()->json(DB::connection('db2') // Asegúrate de usar la conexión 'db2'
             ->table('persona as p')
+            ->leftJoin('persona_usuario_portal as pup', 'pup.persona_id', '=', 'p.id')
+            ->leftJoin('turno_programado as tp', 'tp.persona_id', '=', 'p.id')
+            ->leftJoin('plan as pl', 'tp.plan_id', '=', 'pl.id')
+            ->leftJoin('obra_social as os', 'pl.obra_social_id', '=', 'os.id')
             ->select(
                 'p.id',
                 'p.documento',
@@ -41,17 +51,23 @@ class PersonaAlephooModel extends Model
                 'p.nombres',
                 'p.fecha_nacimiento',
                 DB::raw("CONCAT('+',COALESCE(CAST(p.contacto_celular_prefijo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
-                'p.contacto_email_direccion as email'
+                             COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
+                             COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
+                'p.contacto_email_direccion as email',
+                'os.nombre as obra_social' // Agregamos la obra social
             )
             ->where('p.id', $id)
             ->first());
     }
+
     public static function getPersonalDataByIdArray($id)
     {
         return DB::connection('db2') // Asegúrate de usar la conexión 'db2'
             ->table('persona as p')
+            ->leftJoin('persona_usuario_portal as pup', 'pup.persona_id', '=', 'p.id')
+            ->leftJoin('turno_programado as tp', 'tp.persona_id', '=', 'p.id')
+            ->leftJoin('plan as pl', 'tp.plan_id', '=', 'pl.id')
+            ->leftJoin('obra_social as os', 'pl.obra_social_id', '=', 'os.id')
             ->select(
                 'p.id',
                 'p.documento',
@@ -59,9 +75,10 @@ class PersonaAlephooModel extends Model
                 'p.nombres',
                 'p.fecha_nacimiento',
                 DB::raw("CONCAT('+',COALESCE(CAST(p.contacto_celular_prefijo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
-                                 COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
-                'p.contacto_email_direccion as email'
+                             COALESCE(CAST(p.contacto_celular_codigo AS CHAR), ''), 
+                             COALESCE(CAST(p.contacto_celular_numero AS CHAR), '')) as celular"),
+                'p.contacto_email_direccion as email',
+                'os.nombre as obra_social' // Agregamos la obra social
             )
             ->where('p.id', $id)
             ->first();

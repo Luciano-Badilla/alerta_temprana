@@ -510,15 +510,16 @@
                                             <h3 class="text-sm font-medium text-gray-700">Paciente</h3>
                                             <p class="text-sm text-gray-600">{{ $persona->apellidos }}
                                                 {{ $persona->nombres }}</p>
-                                            <p class="text-sm text-gray-500">DNI: {{ $persona->documento }}</p>
-                                        </div>
+                                                <p class="text-sm text-gray-500" style="margin-top:-3%">DNI: {{ $persona->documento }}</p>
+                                                <p class="text-sm text-gray-500" style="margin-top:-3%">Obra social: {{ $persona->obra_social }}</p>
+                                            </div>
 
                                         <div class="mb-3">
                                             <h3 class="text-sm font-medium text-gray-700">Contacto</h3>
                                             <p class="text-sm text-gray-600">
                                                 {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'N/A' }}
                                             </p>
-                                            <p class="text-sm text-gray-600">
+                                            <p class="text-sm text-gray-600"  style="margin-top:-3%">
                                                 {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'N/A' }}
                                             </p>
                                         </div>

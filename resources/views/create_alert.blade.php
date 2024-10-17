@@ -1,4 +1,3 @@
-
 <style>
     .container {
         padding: 1%;
@@ -196,7 +195,14 @@
                                         este desactualizada.
                                     </div>
                                 </div>
-
+                                <div>
+                                    <label for="addObraSocial" class="form-label">Obra social:</label>
+                                    <input type="ObraSocial" class="form-control" id="addObraSocial"
+                                        name="addObraSocial" placeholder="Obra social">
+                                    <div id="input6_not_found" class="error-message">Obra social no encontrada.</div>
+                                    <div id="input6_6_not_found" class="error-message">Puede que la obra social este
+                                        desactualizada.</div>
+                                </div>
                                 <div>
                                     <label for="addCelular" class="form-label">Celular:</label>
                                     <input type="text" class="form-control" id="addCelular" name="addCelular"
@@ -214,6 +220,7 @@
                                         placeholder="Email">
                                     <div id="input5_not_found" class="error-message">Email no encontrado.</div>
                                 </div>
+
                                 <div id="input5_5_not_found" class="error-message">Puede que el email este
                                     desactualizado.</div>
 
@@ -239,7 +246,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="addTipoExamen" class="form-label">Tipo de Examen:</label>
+                                    <label for="addTipoExamen" class="form-label">Examen/es:</label>
                                     <select class="form-control" id="addTipoExamen" name="addTipoExamen[]" multiple
                                         required>
 
@@ -247,7 +254,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="addDetalle" class="form-label">Detalle:</label>
+                                    <label for="addDetalle" class="form-label">Diagnostico:</label>
                                     <textarea class="form-control" id="addDetalle" name="addDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
                                         oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required></textarea>
@@ -360,7 +367,7 @@
                 personalizadoInput.value = ''; // Limpiar el campo si se selecciona otra opción
             }
 
-            
+
         });
     });
 
@@ -443,13 +450,15 @@
                     $('#addCelular').val(null);
                     $('#addEmail').val(null);
                     $('#addId').val(null);
+                    $('#addObraSocial').val(null);
                     $('#input1_1_not_found').css('display', 'none');
                     $('#input2_2_not_found').css('display', 'none');
                     $('#input3_3_not_found').css('display', 'none');
                     $('#input4_4_not_found').css('display', 'none');
                     $('#input5_5_not_found').css('display', 'none');
+                    $('#input6_6_not_found').css('display', 'none');
                     if (data.nombres || data.apellidos || data.fecha_nacimiento || data
-                        .email || !data.celular === '+' || data.id) {
+                        .email || !data.celular === '+' || data.id || data.obra_social) {
                         $('#alert_paciente').css('display', 'none')
                         $('#alert2_paciente').css('display', 'none')
                         $('#alert3_paciente').css('display', 'none')
@@ -506,6 +515,14 @@
                             $('#addEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
                         }
+                        if (data.obra_social) {
+                            $('#addObraSocial').val(data.obra_social || '');
+                            $('#addObraSocial').attr("required", false);
+                            $('#input6_not_found').css('display', 'none');
+                        } else {
+                            $('#addObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'block');
+                        }
 
                         if ($('#addNombre').val() == "" || $('#addApellido').val() == "" ||
                             $('#addFechaNac').val() == "" || $('#addCelular').val() == "" ||
@@ -553,9 +570,10 @@
                     $('#addCelular').val(null);
                     $('#addEmail').val(null);
                     $('#addId').val(null);
+                    $('#addObraSocial').val(null);
                     $('#alert2_paciente').css('display', 'none')
                     if (data.nombres || data.apellidos || data.fecha_nacimiento || data
-                        .email || !data.celular === '+' || data.id) {
+                        .email || !data.celular === '+' || data.id || data.obra_social) {
                         $('#alert_paciente').css('display', 'none')
                         $('#alert2_paciente').css('display', 'none')
                         $('#alert3_paciente').css('display', 'none')
@@ -609,6 +627,15 @@
                         } else {
                             $('#addEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
+                        }
+
+                        if (data.obra_social) {
+                            $('#addObraSocial').val(data.obra_social || '');
+                            $('#addObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'none');
+                        } else {
+                            $('#addObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'block');
                         }
                     } else {
                         $('#alert_paciente').css('display', 'block')
@@ -693,6 +720,14 @@
                                 $('#addEmail').attr("required", true);
                                 $('#input5_not_found').css('display', 'none');
                                 $('#input5_5_not_found').css('display', 'block');
+                            }
+
+                            if (data.dato && data.tipo_dato == 'obra_social' && $('#addObraSocial')
+                                .val() == "") {
+                                $('#addObraSocial').val(data.dato || '');
+                                $('#addObraSocial').attr("required", true);
+                                $('#input6_not_found').css('display', 'none');
+                                $('#input6_6_not_found').css('display', 'block');
                             }
                         }
                     });

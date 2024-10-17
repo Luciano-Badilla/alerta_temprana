@@ -152,14 +152,14 @@
                         <!-- Información de la alerta -->
                         <div class="form-section bg-gray-50 p-4 rounded-lg">
                             <h2 class="text-xl font-bold mb-4">Información de la alerta</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 <div>
                                     <label for="editEspecialidad"
                                         class="block text-sm font-medium text-gray-700">Especialidad:</label>
                                     <p class="mt-1 text-sm text-gray-900">
                                         {{ EspecialidadModel::find($alert->especialidad_id)->nombre }}</p>
                                 </div>
-                                <div class="flex flex-col md:flex-row gap-4">
+                                <div class="flex flex-col md:flex-row gap-2">
                                     <div>
                                         <p class="text-sm font-medium text-gray-700">Fecha de creación:</p>
                                         <p class="mt-1 text-sm text-gray-900">
@@ -217,7 +217,7 @@
                                 </div>
 
                                 <label for="editDetalle"
-                                    class="block text-sm font-medium text-gray-700 mt-4">Detalle:</label>
+                                    class="block text-sm font-medium text-gray-700 mt-4">Diagnostico:</label>
                                 <div class="mt-1 p-2 bg-white border border-gray-300 rounded-md">
                                     <p class="text-sm text-gray-900">{{ $alert->detalle }}</p>
                                 </div>
@@ -228,7 +228,7 @@
                         <!-- Información del paciente -->
                         <div class="form-section bg-gray-50 p-4 rounded-lg">
                             <h2 class="text-xl font-bold mb-4">Información del paciente</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 <input type="hidden" id="editAlertId" name="editAlertId" value="{{ $alert->id }}"
                                     required>
                                 <input type="hidden" id="editId" name="editId" value="{{ $alert->persona_id }}"
@@ -246,14 +246,13 @@
                                 </div>
                                 <div>
                                     <label for="editApellido"
-                                        class="block text-sm font-medium text-gray-700">Apellido/s:</label>
-                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->apellidos }}</p>
+                                        class="block text-sm font-medium text-gray-700">Apellido/s y Nombre/s:</label>
+                                    <p class="mt-1 text-sm text-gray-900">
+                                        {{ $persona->apellidos . ' ' . $persona->nombres }}</p>
                                 </div>
-                                <div>
-                                    <label for="editNombre"
-                                        class="block text-sm font-medium text-gray-700">Nombre/s:</label>
-                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->nombres }}</p>
-                                </div>
+
+
+
 
                                 <!-- Información de contacto -->
                                 @php
@@ -274,6 +273,11 @@
                                     </p>
                                 </div>
                                 <div>
+                                    <label for="editObraSocial" class="block text-sm font-medium text-gray-700">Obra
+                                        social:</label>
+                                    <p class="mt-1 text-sm text-gray-900">{{ $persona->obra_social }}</p>
+                                </div>
+                                <div>
                                     <label for="editEmail"
                                         class="block text-sm font-medium text-gray-700">Email:</label>
                                     <p class="mt-1 text-sm text-gray-900">
@@ -288,36 +292,40 @@
                         <!-- Botones -->
                         <div
                             class="buttons_div md:flex-wrap justify-center gap-2 mt-6 whitespace-nowrap text-sm text-center p-3">
-                            <button type="button"
-                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                data-estado="Sin contactar">
-                                <i class="fa-solid fa-phone-slash mr-2"></i> Sin contactar
-                            </button>
-                            <button type="button"
-                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                data-estado="Contactado">
-                                <i class="fa-solid fa-phone-flip mr-2"></i> Contactado
-                            </button>
-                            <button type="button"
-                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                data-estado="Confirmado">
-                                <i class="fa-solid fa-calendar-check mr-2"></i> Confirmado
-                            </button>
-                            <button type="button"
-                                class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                data-estado="Rechazado">
-                                <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
-                            </button>
-                            <button type="button"
-                                class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                <i class="fa-solid fa-check mr-2"></i> Completar
-                            </button>
-                            <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
-                                class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                data-estado="Completada">
-                                <i class="fa-solid fa-check mr-2"></i> Generar pedido medico <i class="fa-solid fa-file-pdf"></i>
-                            </a>
+                            @if (!$estados->contains('estado_id', 4))
+                                <button type="button"
+                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                    data-estado="Sin contactar">
+                                    <i class="fa-solid fa-phone-slash mr-2"></i> Sin contactar
+                                </button>
+                                <button type="button"
+                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                    data-estado="Contactado">
+                                    <i class="fa-solid fa-phone-flip mr-2"></i> Contactado
+                                </button>
+                                <button type="button"
+                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                    data-estado="Confirmado">
+                                    <i class="fa-solid fa-calendar-check mr-2"></i> Confirmado
+                                </button>
+                                <button type="button"
+                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                    data-estado="Rechazado">
+                                    <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
+                                </button>
+                                <button type="button"
+                                    class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                    <i class="fa-solid fa-check mr-2"></i> Completar
+                                </button>
+                            @endif
+                            @if ($estados->contains('estado_id', 4))
+                                <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
+                                    class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada"><i class="fa-solid fa-file-pdf"></i>
+                                    Pedido medico
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </form>

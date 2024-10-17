@@ -126,7 +126,7 @@ class EspecialidadController extends Controller
         }
         $alert->tipo_id = $request->input('tipo_alerta');
         $alert->is_in_alephoo = $is_in_alephoo;
-        $alert->updated_by = Auth::user()->name;
+        $alert->updated_by = Auth::user()->id;
 
         $oldRelation = ExamenAlertModel::where('alert_id', $request->input("editAlertId"))->get(); // Obtén la colección
 

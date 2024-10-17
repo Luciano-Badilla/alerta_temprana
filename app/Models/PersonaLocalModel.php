@@ -31,7 +31,8 @@ class PersonaLocalModel extends Model
                 'p.nombres',
                 'p.fecha_nacimiento',
                 'p.celular as celular',
-                'p.email as email'
+                'p.email as email',
+                'p.obra_social as obra_social',
             )
             ->where('p.documento', $dni)
             ->first());

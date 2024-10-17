@@ -47,6 +47,7 @@ class AlertController extends Controller
                 $persona->celular = $request->input('addCelular');
                 $persona->email = $request->input('addEmail');
                 $persona->documento = $request->input('addDNI');
+                $persona->obrasocial = $request->input('addObraSocial');
                 $persona->update();
             } else {
                 $persona = new PersonaLocalModel();
@@ -56,6 +57,7 @@ class AlertController extends Controller
                 $persona->celular = $request->input('addCelular');
                 $persona->email = $request->input('addEmail');
                 $persona->documento = $request->input('addDNI');
+                $persona->obrasocial = $request->input('addObraSocial');
                 $persona->save();
             }
         }
@@ -109,7 +111,7 @@ class AlertController extends Controller
         }
         $alert->tipo_id = $request->input('tipo_alerta');
         $alert->is_in_alephoo = $is_in_alephoo;
-        $alert->created_by = Auth::user()->name;
+        $alert->created_by = Auth::user()->id;
         $alert->save();
 
         foreach ($request->input('addTipoExamen') as $tipoExamen) {
@@ -169,6 +171,22 @@ class AlertController extends Controller
                 }
             }
 
+            if (isset($personalInfo['addObraSocial']) && !empty($personalInfo['addObraSocial'])) {
+                if (!DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $personalInfo['addId'])->exists()) {
+                    $dato = new DatoPersonaModel();
+                    $dato->dato = $personalInfo['addObraSocial'];
+                    $dato->tipo_dato = 'obra_social';
+                    $dato->persona_id = $personalInfo['addId'];
+                    $dato->save();
+                } else {
+                    $dato = DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $personalInfo['addId'])->first();
+                    $dato->dato = $personalInfo['addObraSocial'];
+                    $dato->tipo_dato = 'obra_social';
+                    $dato->persona_id = $personalInfo['addId'];
+                    $dato->update();
+                }
+            }
+
             // Verificar y guardar el email si está presente y no existe en la base de datos
             if (isset($personalInfo['editEmail']) && !empty($personalInfo['editEmail'])) {
                 if (!DatoPersonaModel::where('tipo_dato', 'email')->where('persona_id', $personalInfo['editId'])->exists()) {
@@ -198,6 +216,23 @@ class AlertController extends Controller
                     $dato = DatoPersonaModel::where('tipo_dato', 'celular')->where('persona_id', $personalInfo['editId'])->first();
                     $dato->dato = $personalInfo['editCelular'];
                     $dato->tipo_dato = 'celular';
+                    $dato->persona_id = $personalInfo['editId'];
+                    $dato->update();
+                }
+            }
+
+            // Verificar y guardar el celular si está presente y no existe en la base de datos
+            if (isset($personalInfo['editObraSocial']) && !empty($personalInfo['editObraSocial'])) {
+                if (!DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $personalInfo['editId'])->exists()) {
+                    $dato = new DatoPersonaModel();
+                    $dato->dato = $personalInfo['editObraSocial'];
+                    $dato->tipo_dato = 'obra_social';
+                    $dato->persona_id = $personalInfo['editId'];
+                    $dato->save();
+                } else {
+                    $dato = DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $personalInfo['editId'])->first();
+                    $dato->dato = $personalInfo['editObraSocial'];
+                    $dato->tipo_dato = 'obra_social';
                     $dato->persona_id = $personalInfo['editId'];
                     $dato->update();
                 }
@@ -248,6 +283,7 @@ class AlertController extends Controller
                 $persona->celular = $request->input('editCelular');
                 $persona->email = $request->input('editEmail');
                 $persona->documento = $request->input('editDNI');
+                $persona->obra_social = $request->input('editObraSocial');
                 $persona->update();
             } else {
                 $persona = new PersonaLocalModel();
@@ -257,6 +293,7 @@ class AlertController extends Controller
                 $persona->celular = $request->input('editCelular');
                 $persona->email = $request->input('editEmail');
                 $persona->documento = $request->input('editDNI');
+                $persona->obra_social = $request->input('editObraSocial');
                 $persona->save();
             }
         }
@@ -309,7 +346,7 @@ class AlertController extends Controller
         }
         $alert->tipo_id = $request->input('tipo_alerta');
         $alert->is_in_alephoo = $is_in_alephoo;
-        $alert->updated_by = Auth::user()->name;
+        $alert->updated_by = Auth::user()->id;
 
         $oldRelation = ExamenAlertModel::where('alert_id', $request->input("editAlertId"))->get(); // Obtén la colección
 
@@ -332,6 +369,7 @@ class AlertController extends Controller
     public function gest_index($id)
     {
         $alert = AlertModel::find($id);
+        $estados = EstadoAlertaModel::where('alerta_id', $id)->get();
         $tiposExamenSelected = ExamenAlertModel::with(['alerta', 'tipoExamen'])
             ->where('alert_id', $id)
             ->get();
@@ -344,7 +382,7 @@ class AlertController extends Controller
         }
 
         $especialidades = EspecialidadModel::all();
-        return view('gestion_alert', ['alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona, 'tiposExamenSelected' => $tiposExamenSelected]);
+        return view('gestion_alert', ['estados' => $estados, 'alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona, 'tiposExamenSelected' => $tiposExamenSelected]);
     }
 
     // TuControlador.php
@@ -452,7 +490,7 @@ class AlertController extends Controller
             } else if ($nuevaAlerta->tipo_frecuencia == 'anios') {
                 $nuevaAlerta->fecha_objetivo = Carbon::now()->addYears($nuevaAlerta->frecuencia);
             }
-            $nuevaAlerta->created_by = Auth::user()->name;
+            $nuevaAlerta->created_by = Auth::user()->id;
             $nuevaAlerta->save();
 
             $nuevoEstado = new EstadoAlertaModel();
@@ -462,6 +500,6 @@ class AlertController extends Controller
         }
 
 
-        return redirect()->route('alerts')->with('success', 'Alerta Nº: '.$id.' completada correctamente.');
+        return redirect()->route('alert.gest', ['id' => $id])->with('success', 'Alerta Nº: ' . $id . ' completada correctamente.');
     }
 }

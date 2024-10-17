@@ -200,6 +200,16 @@
                                         este desactualizada.
                                     </div>
                                 </div>
+                                <div>
+                                    <label for="editObraSocial" class="form-label">Obra social:</label>
+                                    <input type="ObraSocial" class="form-control" id="editObraSocial"
+                                        name="editObraSocial" placeholder="Obra social"
+                                        value="{{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $persona->id)->first()->dato ?? $persona->obra_social ?? NULL }}">
+
+                                    <div id="input6_not_found" class="error-message">Obra social no encontrada.</div>
+                                    <div id="input6_6_not_found" class="error-message">Puede que la obra social este
+                                        desactualizada.</div>
+                                </div>
                                 @php
                                     $celularLocal =
                                         DatoPersonaModel::where('persona_id', $persona->id)
@@ -255,7 +265,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="editTipoExamen" class="form-label">Tipo de Examen:</label>
+                                    <label for="editTipoExamen" class="form-label">Examen/es:</label>
                                     <select class="form-control" id="editTipoExamen" name="editTipoExamen[]" multiple
                                         required>
 
@@ -263,7 +273,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="editDetalle" class="form-label">Detalle:</label>
+                                    <label for="editDetalle" class="form-label">Diagnostico:</label>
                                     <textarea class="form-control" id="editDetalle" name="editDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
                                         oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required>{{ $alert->detalle }}</textarea>
@@ -514,7 +524,6 @@
             });
         });
 
-
         $('#searchByDni').on('click', function() {
 
             $('#search_icon').css('display', 'none');
@@ -539,13 +548,15 @@
                     $('#editCelular').val(null);
                     $('#editEmail').val(null);
                     $('#editId').val(null);
+                    $('#editObraSocial').val(null);
                     $('#input1_1_not_found').css('display', 'none');
                     $('#input2_2_not_found').css('display', 'none');
                     $('#input3_3_not_found').css('display', 'none');
                     $('#input4_4_not_found').css('display', 'none');
                     $('#input5_5_not_found').css('display', 'none');
+                    $('#input6_6_not_found').css('display', 'none');
                     if (data.nombres || data.apellidos || data.fecha_nacimiento || data
-                        .email || !data.celular === '+' || data.id) {
+                        .email || !data.celular === '+' || data.id || data.obra_social) {
                         $('#alert_paciente').css('display', 'none')
                         $('#alert2_paciente').css('display', 'none')
                         $('#alert3_paciente').css('display', 'none')
@@ -602,12 +613,21 @@
                             $('#editEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
                         }
+                        if (data.obra_social) {
+                            $('#editObraSocial').val(data.obra_social || '');
+                            $('#editObraSocial').attr("required", false);
+                            $('#input6_not_found').css('display', 'none');
+                        } else {
+                            $('#editObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'block');
+                        }
 
                         if ($('#editNombre').val() == "" || $('#editApellido').val() ==
                             "" ||
                             $('#editFechaNac').val() == "" || $('#editCelular').val() ==
                             "" ||
-                            $('#editEmail').val() == "") {
+                            $('#editEmail').val() == "" || $('#editObraSocial').val() == ""
+                        ) {
                             $('#alert3_paciente').css('display', 'block');
                         }
                         searchLocalDataEmptyInputs()
@@ -632,6 +652,7 @@
         });
 
         function searchLocalData() {
+
             var dni = $('#editDNI').val();
 
             var Url = '{{ route('get_data_local') }}';
@@ -651,9 +672,10 @@
                     $('#editCelular').val(null);
                     $('#editEmail').val(null);
                     $('#editId').val(null);
+                    $('#editObraSocial').val(null);
                     $('#alert2_paciente').css('display', 'none')
                     if (data.nombres || data.apellidos || data.fecha_nacimiento || data
-                        .email || !data.celular === '+' || data.id) {
+                        .email || !data.celular === '+' || data.id || data.obra_social == "") {
                         $('#alert_paciente').css('display', 'none')
                         $('#alert2_paciente').css('display', 'none')
                         $('#alert3_paciente').css('display', 'none')
@@ -707,6 +729,14 @@
                         } else {
                             $('#editEmail').attr("required", true);
                             $('#input5_not_found').css('display', 'block');
+                        }
+                        if (data.obra_social) {
+                            $('#editObraSocial').val(data.obra_social || '');
+                            $('#editObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'none');
+                        } else {
+                            $('#editObraSocial').attr("required", true);
+                            $('#input6_not_found').css('display', 'block');
                         }
                     } else {
                         $('#alert_paciente').css('display', 'block')
@@ -792,6 +822,14 @@
                                 $('#input5_not_found').css('display', 'none');
                                 $('#input5_5_not_found').css('display', 'block');
                             }
+                            if (data.dato && data.tipo_dato == 'obra_social' && $(
+                                    '#editObraSocial')
+                                .val() == "") {
+                                $('#editObraSocial').val(data.dato || '');
+                                $('#editObraSocial').attr("required", true);
+                                $('#input6_not_found').css('display', 'none');
+                                $('#input6_6_not_found').css('display', 'block');
+                            }
                         }
                     });
                     $('#search_icon').css('display', 'block');
@@ -819,7 +857,7 @@
         const tipoExamenSelected = @json($tiposExamenSelected); // Tipos de examen seleccionados
 
         // Extrae solo los tipo_examen_id de tipoExamenSelected
-        const selectedTipoExamenIds = tipoExamenSelected.map(tipo => tipo.tipo_examen_id);
+        const selectedTipoExamenIds = Object.values(tipoExamenSelected).map(tipo => tipo.tipo_examen_id);
 
         function loadTiposExamen(selectedEspecialidad) {
             const tipoExamenSelect = $('#editTipoExamen');

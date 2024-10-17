@@ -12,8 +12,8 @@
         <div>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
             <br>
-            <x-input-label for="email" :value="__('Usuario')" />
-            <x-text-input id="email" class="block mt-1 w-full h-10 p-2 shadow-sm border" type="text" name="email"
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full h-10 p-2 shadow-sm border" type="email" name="email"
                 :value="old('email')" required autofocus autocomplete="username" />
         </div>
 

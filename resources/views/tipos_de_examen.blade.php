@@ -206,7 +206,7 @@
                                 </div>
 
                                 <label for="editDetalle"
-                                    class="block text-sm font-medium text-gray-700 mt-4">Detalle:</label>
+                                    class="block text-sm font-medium text-gray-700 mt-4">Diagnostico:</label>
                                 <div class="mt-1 p-2 bg-white border border-gray-300 rounded-md">
                                     <p class="text-sm text-gray-900">{{ $alert->detalle }}</p>
                                 </div>
