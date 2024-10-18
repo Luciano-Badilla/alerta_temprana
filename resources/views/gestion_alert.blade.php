@@ -148,7 +148,7 @@
                 <!-- Formulario -->
                 <form id="outer-form" action="{{ route('alert.completed') }}" method="POST" class="form-div">
                     @csrf
-                    <div class="space-y-6">
+                    <div class="">
                         <!-- Información de la alerta -->
                         <div class="form-section bg-gray-50 p-4 rounded-lg">
                             <h2 class="text-xl font-bold mb-4">Información de la alerta</h2>
@@ -203,7 +203,7 @@
                                                 <div>
                                                     <span
                                                         class="estado inline-block px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2 {{ match ($estado->estado_id) {
-                                                            1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
+                                                            1, 4, 6, 7, 9, 11 => 'bg-green-100 text-green-800',
                                                             2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
                                                             default => 'bg-gray-100 text-gray-800',
                                                         } }}"
@@ -319,11 +319,17 @@
                                     <i class="fa-solid fa-check mr-2"></i> Completar
                                 </button>
                             @endif
-                            @if ($estados->contains('estado_id', 4))
+                            @if ($estados->contains('estado_id', 4) && !$estados->contains('estado_id', 11))
                                 <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
-                                    class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada"><i class="fa-solid fa-file-pdf"></i>
-                                    Pedido medico
+                                    class="btn btn-success px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada"><i class="fa-solid fa-file-pdf mr-1"></i>
+                                    Generar pedido medico
+                                </a>
+                            @elseif ($estados->contains('estado_id', 4))
+                                <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
+                                    class="btn btn-success px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada"><i class="fa-solid fa-file-pdf mr-1"></i>
+                                    Ver pedido medico
                                 </a>
                             @endif
                         </div>

@@ -335,6 +335,11 @@
 
                             </div>
                             <div style="text-align: right;" class="mt-auto">
+                                <p class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 rounded-md">
+                                    <strong>Atención:</strong> Al completarse esta alerta, se generará un pedido médico
+                                    firmado electrónicamente por usted.
+                                </p>
+
                                 <button type="submit" class="btn btn-dark">Agendar alerta</button>
                             </div>
 
@@ -722,7 +727,8 @@
                                 $('#input5_5_not_found').css('display', 'block');
                             }
 
-                            if (data.dato && data.tipo_dato == 'obra_social' && $('#addObraSocial')
+                            if (data.dato && data.tipo_dato == 'obra_social' && $(
+                                    '#addObraSocial')
                                 .val() == "") {
                                 $('#addObraSocial').val(data.dato || '');
                                 $('#addObraSocial').attr("required", true);

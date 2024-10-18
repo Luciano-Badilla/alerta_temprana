@@ -431,8 +431,8 @@
                             </div>
                             <div class="search_input_div">
                                 <div class="mb-3" style="margin-top: -5%;">
-                                    <input type="text" id="search_input" class="form-control custom-height" style="border-radius: 8px"
-                                        placeholder="Busqueda general">
+                                    <input type="text" id="search_input" class="form-control custom-height"
+                                        style="border-radius: 8px" placeholder="Busqueda general">
                                 </div>
 
                             </div>
@@ -506,20 +506,22 @@
                                             </div>
                                         </div>
 
-                                        <div class="mb-3">
+                                        <div class="mb-1 mt-2">
                                             <h3 class="text-sm font-medium text-gray-700">Paciente</h3>
                                             <p class="text-sm text-gray-600">{{ $persona->apellidos }}
                                                 {{ $persona->nombres }}</p>
-                                                <p class="text-sm text-gray-500" style="margin-top:-3%">DNI: {{ $persona->documento }}</p>
-                                                <p class="text-sm text-gray-500" style="margin-top:-3%">Obra social: {{ $persona->obra_social }}</p>
-                                            </div>
+                                            <p class="text-sm text-gray-500" style="margin-top:-3%">DNI:
+                                                {{ $persona->documento }}</p>
+                                            <p class="text-sm text-gray-500" style="margin-top:-3%">Obra social:
+                                                {{ $persona->obra_social }}</p>
+                                        </div>
 
-                                        <div class="mb-3">
+                                        <div class="mb-1">
                                             <h3 class="text-sm font-medium text-gray-700">Contacto</h3>
                                             <p class="text-sm text-gray-600">
                                                 {{ $celularLocal !== null && $celularLocal !== '+' ? $celularLocal : $persona->celular ?? 'N/A' }}
                                             </p>
-                                            <p class="text-sm text-gray-600"  style="margin-top:-3%">
+                                            <p class="text-sm text-gray-600" style="margin-top:-3%">
                                                 {{ $emailLocal !== null && $emailLocal !== '+' ? $emailLocal : $persona->email ?? 'N/A' }}
                                             </p>
                                         </div>
@@ -552,7 +554,7 @@
                                                 @foreach ($estados as $estado)
                                                     <span
                                                         class="px-2 py-1 text-xs font-medium rounded-full {{ match ($estado->estado_id) {
-                                                            1, 4, 6, 7, 9 => 'bg-green-100 text-green-800',
+                                                            1, 4, 6, 7, 9, 11 => 'bg-green-100 text-green-800',
                                                             2, 3, 5, 8, 10 => 'bg-red-100 text-red-800',
                                                             default => 'bg-gray-100 text-gray-800',
                                                         } }}">
@@ -565,6 +567,12 @@
 
                                     <div class="flex justify-end items-center space-x-2 pr-4 pb-4">
                                         <!-- Agrega 'p-4' o el tamaño que prefieras -->
+                                        @if ($estados->contains('estado_id', 11))
+                                            <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
+                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </a>
+                                        @endif
                                         <a href="{{ route('alert.gest', ['id' => $alert->id]) }}"
                                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                             Gestionar
