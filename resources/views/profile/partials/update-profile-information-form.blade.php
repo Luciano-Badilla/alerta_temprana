@@ -48,8 +48,8 @@
 
         <div>
             <x-input-label for="name" :value="__('Nombre y Apellido')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full h-10 p-2" :value="old('name', $user->name)"
-                required autofocus autocomplete="name" readonly />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full h-10 p-2"
+                :value="old('name', $user->name)" required autofocus autocomplete="name" readonly />
             <p class="mt-1 text-sm text-gray-600">
                 {{ __('Para cambiar el Nombre y Apellido comuniquese con un administrador con el motivo.') }}
             </p>
@@ -58,8 +58,8 @@
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="text" class="mt-1 block w-full h-10 p-2" :value="old('email', $user->email)"
-                required autocomplete="username" />
+            <x-text-input id="email" name="email" type="text" class="mt-1 block w-full h-10 p-2"
+                :value="old('email', $user->email)" required autocomplete="email" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
@@ -81,15 +81,22 @@
                 </div>
             @endif
         </div>
-        <div>
-            <x-input-label for="especialidad" :value="__('Especialidad')" />
-            <select type="text" class="form-select" id="editEspecialidad" name="editEspecialidad" required>
-                @foreach ($especialidades as $especialidad)
-                    <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        @if (Auth::user()->rol_id == 3)
+            <div>
+                <x-input-label for="especialidad" :value="__('Especialidad')" />
+                <select type="text" class="form-select" id="editEspecialidad" name="editEspecialidad" required>
+                    @foreach ($especialidades as $especialidad)
+                        <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <x-input-label for="matricula" :value="__('Matricula')" />
+            <x-text-input id="matricula" name="matricula" type="text" class="mt-1 block w-full h-10 p-2"
+                value="{{ Auth::user()->rol_id == 3 }}" :value="old('matricula', $user->matricula)" required autocomplete="matricula" />
+            <x-input-error class="mt-2" :messages="$errors->get('matricula')" />
+        @endif
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Guardar') }}</x-primary-button>

@@ -33,6 +33,7 @@ class ProfileController extends Controller
         }
 
         $request->user()->especialidad_id = $request->input('editEspecialidad');
+        $request->user()->matricula = $request->input('matricula');
 
         $request->user()->save();
 

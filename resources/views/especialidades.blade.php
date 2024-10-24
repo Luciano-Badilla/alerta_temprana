@@ -50,7 +50,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white  overflow-hidden sm:rounded-lg">
+            <div class="bg-transparent  overflow-hidden sm:rounded-lg">
                 @if ($errors->any())
                     <div class="alert-danger" style="text-align: center">
                         <ul>
@@ -60,7 +60,7 @@
                         </ul>
                     </div>
                 @endif
-                
+
                 @if (session('success'))
                     <div class="alert-success">
                         <p style="padding: 0.3%; text-align: center">{{ session('success') }}</p>
@@ -162,16 +162,6 @@
 </x-app-layout>
 
 <script>
-    /*document.getElementById('tableSearch').addEventListener('keyup', function() {
-        var searchText = this.value.toLowerCase();
-        var tableRows = document.querySelectorAll('#tableBody tr');
-
-        tableRows.forEach(function(row) {
-            var rowText = row.textContent.toLowerCase();
-            row.style.display = rowText.includes(searchText) ? '' : 'none';
-        });
-    });*/
-
     const addExamenModal = document.getElementById('addExamenModal');
     addExamenModal.addEventListener('show.bs.modal', function(event) {
         // Botón que activó el modal

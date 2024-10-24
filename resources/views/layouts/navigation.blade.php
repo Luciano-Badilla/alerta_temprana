@@ -1,6 +1,11 @@
+@php
+    use App\Models\RolModel;
+@endphp
+
 <style>
     .hu_icon {
-        width: 20%;
+        width: auto;
+        max-width: 125px;
     }
 
     /* Personaliza los enlaces en la barra de navegación */
@@ -61,17 +66,38 @@
                     <x-nav-link :href="route('alerts')" :active="request()->routeIs('alerts')">
                         {{ __('Alertas') }}
                     </x-nav-link>
+                    @if (Auth::user()->rol_id == 3 || Auth::user()->rol_id == 4)
+                        <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')" style="white-space:nowrap">
+                            {{ __('Nueva alerta') }}
+                        </x-nav-link>
+                    @endif
+                    @if (Auth::user()->rol_id == 4)
+                        <div class="hidden sm:flex sm:items-center sm:ms-6" style="margin-left: 4%">
+                            <div class="dropdown">
+                                <button
+                                    class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md bg-white focus:outline-none transition ease-in-out duration-150 dropdown-toggle"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div
+                                        class="{{ request()->routeIs('especialidad.create') ? 'text-gray-700' : 'text-gray-500' }} hover:text-gray-700">
+                                        Panel administrativo
+                                    </div>
+                                </button>
 
-                    <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')">
-                        {{ __('Nueva alerta') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')">
-                        {{ __('Especialidades') }}
-                    </x-nav-link>
+                                <ul class="dropdown-menu">
+                                    <x-dropdown-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')">
+                                        {{ __('Especialidades') }}
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('users.gest')" :active="request()->routeIs('users.gest')">
+                                        {{ __('Usuarios') }}
+                                    </x-dropdown-link>
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
-            
+
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -79,12 +105,12 @@
                     <button
                         class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 dropdown-toggle"
                         type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div>{{ Auth::user()->name }}</div>
+                        <div>{{ RolModel::find(Auth::user()->rol_id)->nombre . ' - ' . Auth::user()->name }}</div>
                     </button>
                     <ul class="dropdown-menu">
                         <x-dropdown-link :href="route('profile.edit')"
                             class="no-underline block px-4 py-1 text-sm text-gray-700 hover:bg-gray-100">
-                            {{ __('Perfil') }}
+                            {{ Auth::user()->name }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
                             @csrf
@@ -107,14 +133,33 @@
                 class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
                 {{ __('Alertas') }}
             </x-nav-link>
-            <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')"
-                class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
-                {{ __('Nueva alerta') }}
-            </x-nav-link>
-            <x-nav-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')"
-                class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
-                {{ __('Especialidades') }}
-            </x-nav-link>
+            @if (Auth::user()->rol_id == 3 || Auth::user()->rol_id == 4)
+                <x-nav-link :href="route('alert.create')" :active="request()->routeIs('alert.create')"
+                    class="block px-3 py-2 text-base text-gray-700 hover:bg-gray-100">
+                    {{ __('Nueva alerta') }}
+                </x-nav-link>
+            @endif
+            @if (Auth::user()->rol_id == 4)
+                <div class="sm:flex sm:items-center sm:ms-6">
+                    <div class="dropdown">
+                        <button
+                            class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md bg-white focus:outline-none transition ease-in-out duration-150 dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="{{ request()->routeIs(['especialidad.create', 'users.gest']) ? 'text-gray-700' : 'text-gray-500' }} hover:text-gray-700">
+                                Panel administrativo </div>
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            <x-dropdown-link :href="route('especialidad.create')" :active="request()->routeIs('especialidad.create')">
+                                {{ __('Especialidades') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('users.gest')" :active="request()->routeIs('users.gest')">
+                                {{ __('Usuarios') }}
+                            </x-dropdown-link>
+                        </ul>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </nav>

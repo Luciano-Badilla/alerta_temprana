@@ -24,7 +24,9 @@ class User extends Authenticatable
         'matricula',
         'password',
         'especialidad_id',
-        'pass_changed'
+        'pass_changed',
+        'validated',
+        'rol_id'
     ];
 
     /**
@@ -53,5 +55,10 @@ class User extends Authenticatable
     public function especialidad()
     {
         return $this->belongsTo(EspecialidadModel::class, 'especialidad_id');
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(RolModel::class, 'rol_id');
     }
 }

@@ -567,6 +567,7 @@
 
                                     <div class="flex justify-end items-center space-x-2 pr-4 pb-4">
                                         <!-- Agrega 'p-4' o el tamaño que prefieras -->
+                                        @if (Auth::user()->rol_id >= 2)
                                         @if ($estados->contains('estado_id', 11))
                                             <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-600">
@@ -581,6 +582,7 @@
                                             class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                             Editar
                                         </a>
+                                        @endif
                                     </div>
 
                                 </div>
