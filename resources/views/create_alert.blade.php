@@ -387,7 +387,10 @@
 
 
     $(document).ready(function() {
-        $('#addTipoExamen').select2();
+        $('#addTipoExamen').select2({
+            tags: true, // Permite crear nuevas opciones
+            placeholder: "Selecciona o añade una opción" // Placeholder opcional
+        });
         $('#addEspecialidad').val("{{ $especialidadPrincipal }}");
         $('#addEspecialidad').select2();
         $('#addEspecialidad').trigger('change');
@@ -754,7 +757,11 @@
 
     $(document).ready(function() {
         // Inicializa Select2
-        $('#addTipoExamen').select2();
+        $('#addTipoExamen').select2({
+            tags: true, // Permite crear nuevas opciones
+            placeholder: "Selecciona o añade una opción" // Placeholder opcional
+        });
+
 
         const tiposExamen =
             @json($tiposExamen); // Asumiendo que tienes los tipos de examen disponibles en un array de PHP
@@ -775,7 +782,11 @@
             });
 
             // Actualiza Select2 para mostrar los nuevos elementos
-            tipoExamenSelect.select2();
+            tipoExamenSelect.select2({
+                tags: true, // Permite crear nuevas opciones
+                placeholder: "Selecciona o añade una opción" // Placeholder opcional
+            });
+
         }
 
         // Cargar los tipos de examen cuando cambia la especialidad

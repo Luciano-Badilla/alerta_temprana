@@ -115,10 +115,20 @@ class AlertController extends Controller
         $alert->save();
 
         foreach ($request->input('addTipoExamen') as $tipoExamen) {
-            $relacion = new ExamenAlertModel();
-            $relacion->tipo_examen_id = $tipoExamen;
-            $relacion->alert_id = $alert->id;
-            $relacion->save();
+            if (is_string($tipoExamen)) {
+                if (!ExamenModel::where('nombre', $tipoExamen)->first()) {
+                    $nuevoExamen = ExamenModel::create(['nombre' => $tipoExamen]);
+                    $relacion = new ExamenAlertModel();
+                    $relacion->tipo_examen_id = $nuevoExamen->id;
+                    $relacion->alert_id = $alert->id;
+                    $relacion->save();
+                }
+            } else {
+                $relacion = new ExamenAlertModel();
+                $relacion->tipo_examen_id = $tipoExamen;
+                $relacion->alert_id = $alert->id;
+                $relacion->save();
+            }
         }
 
         $estado = new EstadoAlertaModel();
