@@ -89,7 +89,8 @@
         </div>
 
         <div class="prescription">
-            <h3 style="margin-top: 0;">Examenes:</h3>
+            <h3 style="margin-top: 0;">Rp/</h3>
+            <h3 style="margin-top: 0;">STO:</h3>
             <div style="margin-top: -15px">
                 @foreach ($examenes as $examen)
                     <p style="margin-left: 10px;margin-top: -10px;">
