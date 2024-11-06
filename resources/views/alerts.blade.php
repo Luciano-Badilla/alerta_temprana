@@ -422,7 +422,7 @@
                                                 </select>
                                                 <input type="number" class="form-control" id="year"
                                                     style="margin-top: 5px; border: 1px solid #ced4da; border-radius: 0.25rem; padding: 0.375rem 0.75rem;"
-                                                    placeholder="año">
+                                                    placeholder="Año">
                                             </div>
                                         </div>
 
@@ -432,7 +432,7 @@
                             <div class="search_input_div">
                                 <div class="mb-3" style="margin-top: -5%;">
                                     <input type="text" id="search_input" class="form-control custom-height"
-                                        style="border-radius: 8px" placeholder="Busqueda general">
+                                        style="border-radius: 8px" placeholder="Búsqueda general">
                                 </div>
 
                             </div>

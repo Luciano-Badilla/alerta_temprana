@@ -85,7 +85,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-lg text-gray-800 leading-tight">
-            {{ __('Gestion alerta Nº ' . $alert->id) }}
+            {{ __('Gestión alerta Nº ' . $alert->id) }}
         </h2>
     </x-slot>
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -206,7 +206,7 @@
                                 </div>
 
                                 <label for="editDetalle"
-                                    class="block text-sm font-medium text-gray-700 mt-4">Diagnostico:</label>
+                                    class="block text-sm font-medium text-gray-700 mt-4">Diagnóstico:</label>
                                 <div class="mt-1 p-2 bg-white border border-gray-300 rounded-md">
                                     <p class="text-sm text-gray-900">{{ $alert->detalle }}</p>
                                 </div>

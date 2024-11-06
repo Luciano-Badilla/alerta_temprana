@@ -117,7 +117,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault(); this.closest('form').submit();"
                                 class="no-underline block px-4 py-1 text-sm text-gray-700 hover:bg-gray-100">
-                                {{ __('Cerrar Sesion') }}
+                                {{ __('Cerrar Sesión') }}
                             </x-dropdown-link>
                         </form>
                     </ul>

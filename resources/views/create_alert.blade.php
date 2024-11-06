@@ -154,7 +154,7 @@
                                     <label for="addDNI" class="form-label">DNI:</label>
                                     <div class="input-wrapper">
                                         <input type="text" class="form-control" id="addDNI" name="addDNI"
-                                            placeholder="Numero de DNI" required>
+                                            placeholder="Número de DNI" required>
                                         <button type="button" class="btn btn-dark" id="searchByDni">
                                             <i id="search_icon" class="fa-solid fa-magnifying-glass"
                                                 style="display: block"></i>
@@ -254,7 +254,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="addDetalle" class="form-label">Diagnostico:</label>
+                                    <label for="addDetalle" class="form-label">Diagnóstico:</label>
                                     <textarea class="form-control" id="addDetalle" name="addDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
                                         oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required></textarea>

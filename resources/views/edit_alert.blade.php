@@ -273,7 +273,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="editDetalle" class="form-label">Diagnostico:</label>
+                                    <label for="editDetalle" class="form-label">Diagnóstico:</label>
                                     <textarea class="form-control" id="editDetalle" name="editDetalle" placeholder="Detalle"
                                         style="resize: none; overflow: hidden;"
                                         oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" required>{{ $alert->detalle }}</textarea>

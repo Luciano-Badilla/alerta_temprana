@@ -31,7 +31,7 @@ class PDFController extends Controller
         $estados = EstadoModel::all();
         $especialidades = EspecialidadModel::all();
         $examenes = ExamenAlertModel::where('alert_id', $id)->get();
-        log::info($examenes);
+        Log::info($examenes);
 
         // Agrupar todos los datos en un array
         $data = [
@@ -51,14 +51,12 @@ class PDFController extends Controller
 
             $alert->pedido_medico_created_at = \Carbon\Carbon::now()->format('Y-m-d');
             $alert->update();
-
         }
 
-
-        // Pasar los datos a la vista
-        $pdf = Pdf::loadView('pdfs/pedido_medico', $data);
+        // Configurar el tamaño de papel personalizado y cargar la vista
+        $pdf = Pdf::loadView('pdfs/pedido_medico', $data)->setPaper([0, 0, 360, 576], 'portrait'); // 5x8 pulgadas en puntos
 
         // Descargar el PDF
-        return $pdf->stream('reporte.pdf');
+        return $pdf->stream('Pedido medico - ' . $data['paciente']->nombres . ' ' . $data['paciente']->apellidos . '.pdf');
     }
 }

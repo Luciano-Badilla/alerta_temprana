@@ -13,60 +13,64 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-size: 12px;
+            /* Reducir tamaño de texto */
+            line-height: 1.4;
             color: #333;
             margin: 0;
         }
 
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 450px;
+            /* Ajuste para un tamaño de pedido médico */
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+            /* Reducir el padding */
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            /* Reducir espacio entre elementos */
         }
 
         .logo {
-            width: 75%;
-            margin-bottom: 20px;
+            width: 60%;
+            /* Ajustar tamaño del logo */
+            margin-bottom: 10px;
         }
 
         .patient-info,
         .prescription {
             border: 1px solid #000;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            margin-right: 25px;
+            padding: 10px;
+            margin-bottom: 15px;
         }
 
         .patient-info p,
         .prescription p {
-            margin: 5px 0;
+            margin: 3px 0;
+            /* Reducir espacio entre párrafos */
         }
 
         .prescription {
-            min-height: 500px;
-            /* Set a reasonable min-height value */
+            min-height: 300px;
+            /* Ajustar altura mínima */
             height: auto;
-            /* Allows the content to adjust if it's larger than the min-height */
-            margin-right: 25px;
         }
 
         .footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 10px;
+            /* Reducir tamaño de texto en el pie de página */
             color: #666;
-            margin-top: 30px;
+            margin-top: 20px;
+            padding-top: 10px;
             border-top: 1px solid #ddd;
-            padding-top: 20px;
         }
     </style>
-
 </head>
 
 <body>
@@ -76,29 +80,28 @@
         </div>
 
         <div class="patient-info">
-            <p style="margin-top: -5px;"><strong>Paciente:</strong>
-                {{ $paciente->apellidos . ' ' . $paciente->nombres }}</p>
-            <p style="margin-top: -5px;"><strong>Documento:</strong> {{ $paciente->documento }}</p>
-            <p style="margin-top: -5px;"><strong>Obra social:</strong>
+            <p><strong>Paciente:</strong> {{ $paciente->apellidos . ' ' . $paciente->nombres }}</p>
+            <p><strong>Documento:</strong> {{ $paciente->documento }}</p>
+            <p><strong>Obra social:</strong>
                 {{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $paciente->id)->first()->dato ??($paciente->obra_social ?? null) }}
             </p>
-            <p style="margin-top: -5px;"><strong>Fecha:</strong>
+            <p><strong>Fecha:</strong>
                 {{ $alert->pedido_medico_created_at ? \Carbon\Carbon::parse($alert->pedido_medico_created_at)->format('d/m/Y') : 'N/A' }}
-
             </p>
         </div>
 
         <div class="prescription">
-            <h3 style="margin-top: 0;">Rp/</h3>
-            <h3 style="margin-top: 0;">STO:</h3>
-            <div style="margin-top: -15px">
+            <h3 style="margin: 0;">Rp/</h3>
+            <h3 style="margin: 0; margin-top:5%;">STO:</h3>
+            <div style="margin-top: -10px;">
                 @foreach ($examenes as $examen)
-                    <p style="margin-left: 10px;margin-top: -10px;">
-                        - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}</p>
+                    <p style="margin-left: 10px; margin-top:3%;">
+                        - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}
+                    </p>
                 @endforeach
             </div>
-            <h3 style="margin-top: 0;">Diagnóstico:</h3>
-            <p style="margin-left: 10px;margin-top: -15px;">{{ $alert->detalle }}</p>
+            <h3 style="margin: 0; margin-top:5%;">Diagnóstico:</h3>
+            <p style="margin-left: 10px;">{{ $alert->detalle }}</p>
         </div>
 
         <div class="footer">
@@ -106,8 +109,9 @@
                 {{ User::find($alert->created_by)->name ?? '' }} - Matrícula:
                 {{ User::find($alert->created_by)->matricula ?? '' }} - Información confidencial - Secreto médico -
                 Alcances del art. 156 del Código Penal. Validado en el sistema HIS-Alephoo según el art. 5 de la Ley
-                25.506 "Firma Electrónica" <br> Paso de los Andes 3051
-                - Ciudad de Mendoza.</p>
+                25.506 "Firma Electrónica".
+                <br> Paso de los Andes 3051 - Ciudad de Mendoza.
+            </p>
             <p>Teléfonos (0261) 4135011 / (0261) 4135021 - info@hospital.uncu.edu.ar - www.hospital.uncu.edu.ar </p>
         </div>
     </div>
