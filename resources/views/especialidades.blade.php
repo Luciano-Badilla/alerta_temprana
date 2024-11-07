@@ -105,7 +105,7 @@
                                         @endphp
 
                                         @if ($examenesEspecialidad->isEmpty())
-                                            <p class="bg-gray-100 p-2 rounded-lg text-center">No hay tipos de examen
+                                            <p class="bg-gray-100 p-2 rounded-lg text-center">No hay examenes
                                                 disponibles para esta especialidad.</p>
                                         @else
                                             @foreach ($examenesEspecialidad as $tipoExamen)

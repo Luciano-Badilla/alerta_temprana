@@ -168,7 +168,7 @@
                             <div class="mt-4">
                                 <div class="flex flex-col md:flex-row md:space-x-4">
                                     <div class="flex-1">
-                                        <label class="block text-sm font-medium text-gray-700">Tipos de examen:</label>
+                                        <label class="block text-sm font-medium text-gray-700">Examenes:</label>
                                         <div class="div-estados flex flex-row flex-wrap">
                                             @foreach ($tiposExamenSelected as $tipoExamen)
                                                 <div>

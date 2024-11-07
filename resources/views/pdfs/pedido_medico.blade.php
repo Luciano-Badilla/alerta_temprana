@@ -11,33 +11,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedido Médico</title>
     <style>
+        @page {
+            size: A4 landscape;
+            /* Define la orientación horizontal */
+            margin: 0.5cm;
+            /* Ajuste de márgenes para impresión */
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
-            /* Reducir tamaño de texto */
             line-height: 1.4;
             color: #333;
             margin: 0;
+            max-width: 35%; 
         }
 
         .container {
             width: 100%;
-            max-width: 450px;
-            /* Ajuste para un tamaño de pedido médico */
+            max-width: 1000px;
+            /* Ajuste para el formato apaisado */
             margin: 0 auto;
             padding: 10px;
-            /* Reducir el padding */
         }
 
         .header {
             text-align: center;
             margin-bottom: 10px;
-            /* Reducir espacio entre elementos */
         }
 
         .logo {
             width: 60%;
-            /* Ajustar tamaño del logo */
             margin-bottom: 10px;
         }
 
@@ -52,19 +56,16 @@
         .patient-info p,
         .prescription p {
             margin: 3px 0;
-            /* Reducir espacio entre párrafos */
         }
 
         .prescription {
-            min-height: 300px;
-            /* Ajustar altura mínima */
+            min-height: 390px;
             height: auto;
         }
 
         .footer {
             text-align: center;
             font-size: 10px;
-            /* Reducir tamaño de texto en el pie de página */
             color: #666;
             margin-top: 20px;
             padding-top: 10px;

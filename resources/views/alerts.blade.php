@@ -484,8 +484,7 @@
                                                 {{ EspecialidadModel::find($alert->especialidad_id)->nombre ?? '' }}
                                             </h3>
                                             <div class="flex-1">
-                                                <label class="block text-sm font-medium text-gray-700">Tipos de
-                                                    examen:</label>
+                                                <label class="block text-sm font-medium text-gray-700">Examenes:</label>
                                                 <div class="div-examenes flex flex-row flex-wrap">
                                                     @foreach ($tiposExamenSelected as $tipoExamen)
                                                         @if ($tipoExamen->alert_id === $alert->id)

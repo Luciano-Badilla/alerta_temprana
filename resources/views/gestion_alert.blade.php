@@ -12,7 +12,7 @@
 <style>
     /* Estilos personalizados */
     .custom-scrollbar {
-        max-height: 100px;
+        max-height: auto;
         overflow: auto;
         text-align: start;
     }
@@ -179,7 +179,7 @@
                             <div class="mt-4">
                                 <div class="flex flex-col md:flex-row md:space-x-4">
                                     <div class="flex-1">
-                                        <label class="block text-sm font-medium text-gray-700">Tipos de examen:</label>
+                                        <label class="block text-sm font-medium text-gray-700">Examenes:</label>
                                         <div class="div-examenes flex flex-row flex-wrap">
                                             @foreach ($tiposExamenSelected as $tipoExamen)
                                                 <div>
@@ -287,6 +287,11 @@
                                 <input type="hidden" id="is_in_alephoo" name="is_in_alephoo"
                                     value="{{ $alert->is_in_alephoo }}" required>
                             </div>
+                            <label class="block text-sm font-medium text-gray-700 mt-4">Observaciones:</label>
+                            <textarea
+                                class="text-sm text-gray-900 mt-1 p-2 bg-white border border-gray-300 rounded-md w-full resize-none custom-scrollbar"
+                                rows="1" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" id="observaciones">{{ $alert->observacion }}</textarea>
+
                         </div>
 
                         <!-- Botones -->
@@ -353,6 +358,44 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById("observaciones");
+
+        // Ajusta la altura inicial del textarea
+        textarea.style.height = textarea.scrollHeight + 'px';
+
+        // Detecta cuando el usuario deja de escribir y envía el valor
+        textarea.addEventListener("focusout", function() {
+            autoSaveObservacion();
+        });
+
+        function autoSaveObservacion() {
+            const observacion = textarea.value;
+            const url = "{{ route('guardar.observacion') }}";
+            // Llamada AJAX usando fetch
+            fetch(url, { // Cambia esta ruta según tu configuración
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Token CSRF para Laravel
+                    },
+                    body: JSON.stringify({
+                        observacion: observacion,
+                        alert_id: {{ $alert->id }}
+                    }) // Enviar ID para identificar el alert
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Observación guardada automáticamente');
+                    } else {
+                        console.error('Error al guardar la observación');
+                    }
+                })
+                .catch(error => console.error('Error en la solicitud:', error));
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        
         const buttons = document.querySelectorAll('.buttons_div button');
         const estadosDiv = document.querySelector('.div-estados');
 
@@ -523,7 +566,7 @@
 
         $('#submit_form').on('click', completed);
 
-
+        alert();
 
     });
 </script>

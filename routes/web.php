@@ -26,6 +26,8 @@ Route::middleware(['auth', 'verified', CheckUserAccess::class])->group(function 
         Route::post('/alerts/edit_store_alert', [AlertController::class, 'edit'])->name('alert.edit_store');
         Route::get('/alerts/gest_alert/{id}', [AlertController::class, 'gest_index'])->name('alert.gest');
         Route::post('/alerts/gest_alert', [AlertController::class, 'completed'])->name('alert.completed');
+        Route::post('/alerts/gest_alert/observacion', [AlertController::class, 'guardarObservacion'])->name('guardar.observacion');
+
 
         Route::get('/generate_pdf/{id}', [PDFController::class, 'generate'])->name('generate.pdf');
 

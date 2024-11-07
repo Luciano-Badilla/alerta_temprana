@@ -523,4 +523,17 @@ class AlertController extends Controller
 
         return redirect()->route('alert.gest', ['id' => $id])->with('success', 'Alerta Nº: ' . $id . ' completada correctamente.');
     }
+
+    public function guardarObservacion(Request $request)
+    {
+        $alert = AlertModel::find($request->alert_id);
+        if ($alert) {
+            $alert->observacion = $request->observacion;
+            $alert->save();
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Alerta no encontrada'], 404);
+        }
+    }
 }
