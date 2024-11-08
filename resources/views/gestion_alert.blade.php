@@ -117,6 +117,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="postponeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 8px !important">
+                <div class="modal-header border-transparent">
+                    <div class="flex flex-col">
+                        <h5 class="modal-title" id="exampleModalLabel">Posponer alerta</h5>
+                        <p class="text-muted">Esta acción aplazara la fecha de la alerta.</p>
+                    </div>
+                    <button type="button" class="btn-close text-sm" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body border-transparent">
+                    <div class="py-2 px-3 text-blue-600 d-flex align-items-center" role="alert"
+                        style="border: solid #447aef; border-radius: 8px; border-width: 1px; margin-top:-5%">
+                        <i class="fa-solid fa-triangle-exclamation mr-2" style="color:#447aef"></i>
+                        <div>Serás redirigido a la pantalla de edición de la alerta.</div>
+                    </div>
+                </div>
+                <div class="modal-footer border-transparent">
+                    <button type="button" class="btn"
+                        style="border: solid gray; border-radius: 8px; border-width: 1px;"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="postpone_form" class="btn btn-primary"
+                        style="border-radius: 8px !important">Ir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto rounded-lg">
 
@@ -229,10 +258,10 @@
                         <div class="form-section bg-gray-50 p-4 rounded-lg">
                             <h2 class="text-xl font-bold mb-4">Información del paciente</h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                <input type="hidden" id="editAlertId" name="editAlertId" value="{{ $alert->id }}"
-                                    required>
-                                <input type="hidden" id="editId" name="editId" value="{{ $alert->persona_id }}"
-                                    required>
+                                <input type="hidden" id="editAlertId" name="editAlertId"
+                                    value="{{ $alert->id }}" required>
+                                <input type="hidden" id="editId" name="editId"
+                                    value="{{ $alert->persona_id }}" required>
 
                                 <div>
                                     <label for="editDNI" class="block text-sm font-medium text-gray-700">DNI:</label>
@@ -319,6 +348,11 @@
                                     <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
                                 </button>
                                 <button type="button"
+                                    class="btn btn-primary px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#postponeModal">
+                                    <i class="fa-solid fa-clock-rotate-left"></i> Posponer
+                                </button>
+                                <button type="button"
                                     class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                                     data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
                                     <i class="fa-solid fa-check mr-2"></i> Completar
@@ -395,7 +429,7 @@
         }
     });
     document.addEventListener('DOMContentLoaded', function() {
-        
+
         const buttons = document.querySelectorAll('.buttons_div button');
         const estadosDiv = document.querySelector('.div-estados');
 
@@ -564,9 +598,13 @@
             $('#outer-form').submit();
         }
 
-        $('#submit_form').on('click', completed);
+        function postponed() {
+            const url = @json(route('alert.edit', ['id' => $alert->id, 'edit_time' => true]));
+            window.location.href = url;
+        }
 
-        alert();
+        $('#submit_form').on('click', completed);
+        $('#postpone_form').on('click', postponed);
 
     });
 </script>

@@ -154,6 +154,7 @@ class AlertController extends Controller
     {
         // Obtener los datos de la solicitud
         $personalInfo = $request->input('personalInfo');
+        Log::info($personalInfo);
         $is_in_alephoo = $personalInfo['is_in_alephoo'];
         // Verificar que los datos existan
         if ($personalInfo && $is_in_alephoo) {
@@ -261,7 +262,7 @@ class AlertController extends Controller
         }
     }
 
-    public function edit_index($id)
+    public function edit_index($id, $edit_time = false)
     {
         $alert = AlertModel::find($id);
         $estados = EstadoAlertaModel::getEstadosById($id);
@@ -282,7 +283,8 @@ class AlertController extends Controller
             'persona' => $persona,
             'estados' => $estados,
             'tiposExamen' => $tiposExamen,
-            'tiposExamenSelected' => $tiposExamenSelected
+            'tiposExamenSelected' => $tiposExamenSelected,
+            'edit_time' => $edit_time
         ]);
     }
 
@@ -375,12 +377,38 @@ class AlertController extends Controller
             $item->delete(); // Elimina cada modelo individualmente
         }
 
-        foreach ($request->input('editTipoExamen') as $tipoExamen) {
-            $relacion = new ExamenAlertModel();
-            $relacion->tipo_examen_id = $tipoExamen;
-            $relacion->alert_id = $alert->id;
-            $relacion->save();
+        // Decodificar el JSON en un array
+        $tipoExamenes = json_decode($request->input('hiddenTipoExamen'), true);
+
+        foreach ($tipoExamenes as $tipoExamen) {
+            Log::info($tipoExamen);
+
+            if (is_numeric($tipoExamen)) {
+                // Asumimos que es un ID de un examen ya existente
+                $tipoExamenId = $tipoExamen;
+            } else {
+                // Verificamos si el examen ya existe buscando por nombre
+                $examenExistente = ExamenModel::where('nombre', $tipoExamen)->first();
+                if (!$examenExistente) {
+                    // Si no existe, lo creamos y usamos su ID
+                    $nuevoExamen = ExamenModel::create([
+                        'nombre' => $tipoExamen,
+                        'especialidad_id' => $alert->especialidad_id
+                    ]);
+                    $tipoExamenId = $nuevoExamen->id;
+                } else {
+                    // Si existe, usamos el ID del examen existente
+                    $tipoExamenId = $examenExistente->id;
+                }
+            }
+
+            // Creamos la relación usando el ID de examen
+            ExamenAlertModel::create([
+                'tipo_examen_id' => $tipoExamenId,
+                'alert_id' => $alert->id,
+            ]);
         }
+
 
         $alert->save();
 

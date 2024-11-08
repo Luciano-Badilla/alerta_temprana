@@ -22,7 +22,8 @@ Route::middleware(['auth', 'verified', CheckUserAccess::class])->group(function 
         Route::get('/alerts/create_alert', [AlertController::class, 'index'])->name('alert.create');
         Route::post('/alerts/create_alert', [AlertController::class, 'store'])->name('alert.store');
         Route::post('/alerts/create_alert2', [AlertController::class, 'store2'])->name('alert.store2');
-        Route::get('/alerts/edit_alert/{id}', [AlertController::class, 'edit_index'])->name('alert.edit');
+        Route::get('/alerts/edit_alert/{id}/{edit_time?}', [AlertController::class, 'edit_index'])->name('alert.edit');
+
         Route::post('/alerts/edit_store_alert', [AlertController::class, 'edit'])->name('alert.edit_store');
         Route::get('/alerts/gest_alert/{id}', [AlertController::class, 'gest_index'])->name('alert.gest');
         Route::post('/alerts/gest_alert', [AlertController::class, 'completed'])->name('alert.completed');

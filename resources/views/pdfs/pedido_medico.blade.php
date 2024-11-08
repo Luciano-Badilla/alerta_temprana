@@ -24,7 +24,7 @@
             line-height: 1.4;
             color: #333;
             margin: 0;
-            max-width: 35%; 
+            max-width: 35%;
         }
 
         .container {
@@ -93,16 +93,18 @@
 
         <div class="prescription">
             <h3 style="margin: 0;">Rp/</h3>
-            <h3 style="margin: 0; margin-top:5%;">STO:</h3>
-            <div style="margin-top: -10px;">
-                @foreach ($examenes as $examen)
-                    <p style="margin-left: 10px; margin-top:3%;">
-                        - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}
-                    </p>
-                @endforeach
+            <div style="margin-left: 20px;">    
+                <h3 style="margin: 0; margin-top:5%;">STO:</h3>
+                <div>
+                    @foreach ($examenes as $examen)
+                        <p style="margin-left: 10px;">
+                            - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}
+                        </p>
+                    @endforeach
+                </div>
+                <h3 style="margin: 0; margin-top:1%;">Diagnóstico:</h3>
+                <p style="margin-left: 10px;">{{ $alert->detalle }}</p>
             </div>
-            <h3 style="margin: 0; margin-top:5%;">Diagnóstico:</h3>
-            <p style="margin-left: 10px;">{{ $alert->detalle }}</p>
         </div>
 
         <div class="footer">

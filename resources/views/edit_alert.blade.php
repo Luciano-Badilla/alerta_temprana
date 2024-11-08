@@ -202,9 +202,9 @@
                                 </div>
                                 <div>
                                     <label for="editObraSocial" class="form-label">Obra social:</label>
-                                    <input type="ObraSocial" class="form-control" id="editObraSocial"
-                                        name="editObraSocial" placeholder="Obra social"
-                                        value="{{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $persona->id)->first()->dato ?? $persona->obra_social ?? NULL }}">
+                                    <input type="text" class="form-control" id="editObraSocial" name="editObraSocial"
+                                        placeholder="Obra social"
+                                        value="{{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $persona->id)->first()->dato ??($persona->obra_social ?? null) }}">
 
                                     <div id="input6_not_found" class="error-message">Obra social no encontrada.</div>
                                     <div id="input6_6_not_found" class="error-message">Puede que la obra social este
@@ -254,22 +254,22 @@
                             <div class="input-group">
                                 <div>
                                     <label for="editEspecialidad" class="form-label">Especialidad:</label>
-                                    <select type="text" class="form-control" id="editEspecialidad"
-                                        name="editEspecialidad" required>
+                                    <select type="text" class="form-control" id="editEspecialidad" required>
                                         <option value="">Seleccione una especialidad</option>
                                         @foreach ($especialidades as $especialidad)
                                             <option value="{{ $especialidad->id }}">{{ $especialidad->nombre }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" id="hiddenEspecialidad" name="editEspecialidad">
                                 </div>
 
                                 <div>
                                     <label for="editTipoExamen" class="form-label">Examen/es:</label>
                                     <select class="form-control" id="editTipoExamen" name="editTipoExamen[]" multiple
                                         required>
-
                                     </select>
+                                    <input type="hidden" id="hiddenTipoExamen" name="hiddenTipoExamen">
                                 </div>
 
                                 <div>
@@ -365,7 +365,7 @@
 
                             </div>
                             <div style="text-align: right;">
-                                <button type="submit" class="btn btn-dark">Editar alerta</button>
+                                <button type="submit" class="btn btn-dark" id="edit_button">Editar alerta</button>
                             </div>
 
                         </div>
@@ -411,14 +411,22 @@
 
     if (completada || isCurrentMonthAndYear) {
         // Selecciona todos los inputs y los desactiva
-        document.querySelectorAll('input').forEach(input => input.disabled = true);
+        document.querySelectorAll('input').forEach(input => input.readOnly = true);
+        document.querySelectorAll('.form-check-input').forEach(input => input.disabled = true);
         document.querySelectorAll('select').forEach(input => input.disabled = true);
-        document.querySelectorAll('textarea').forEach(input => input.disabled = true);
+        document.querySelectorAll('textarea').forEach(input => input.readOnly = true);
         document.querySelectorAll('button').forEach(input => input.disabled = true);
         if (completada) {
             $('#alert_completed').show();
         } else {
             $('#alert_actived').show();
+        }
+        const edit_time = "{{ $edit_time }}";
+        if (edit_time == true) {
+            document.querySelectorAll('.form-check-input').forEach(input => input.disabled = false);
+            document.getElementById('numPersonalizado').readOnly = false;
+            document.getElementById('edit_button').disabled = false;
+            $('#alert_actived').hide();
         }
 
     }
@@ -481,10 +489,17 @@
         }
     });
 
+    $('#editTipoExamen').on('change', function() {
+        let selectedValues = $(this).val(); // Obtiene el array de valores seleccionados
+        document.getElementById('hiddenTipoExamen').value = JSON.stringify(selectedValues); // Guarda como JSON
+    });
 
     $(document).ready(function() {
 
-
+        document.getElementById('hiddenEspecialidad').value = document.getElementById('editEspecialidad').value;
+        document.getElementById('editEspecialidad').addEventListener('change', function() {
+            document.getElementById('hiddenEspecialidad').value = this.value;
+        });
         // Ajuste de altura después de un pequeño retraso
         setTimeout(function() {
             $('.select2-container').css('height', 'auto');
@@ -499,7 +514,7 @@
             // Recorremos cada input dentro del formulario
             $('#outer-form').find('input, textarea').each(function() {
                 // Si el campo no tiene el atributo readonly y tiene valor, lo añadimos al objeto
-                if (!$(this).prop('readonly') && $(this).val() !== '') {
+                if (!$(this).prop('disabled') && $(this).val() !== '') {
                     personalInfo[$(this).attr('name')] = $(this).val();
                 }
             });
@@ -851,7 +866,10 @@
 <script>
     $(document).ready(function() {
         // Inicializa Select2
-        $('#editTipoExamen').select2();
+        $('#editTipoExamen').select2({
+            tags: true, // Permite crear nuevas opciones
+            placeholder: "Selecciona o añade una opción" // Placeholder opcional
+        });
 
         const tiposExamen = @json($tiposExamen); // Tipos de examen disponibles
         const tipoExamenSelected = @json($tiposExamenSelected); // Tipos de examen seleccionados
@@ -868,14 +886,16 @@
             // Filtra y agrega las opciones correspondientes a la especialidad seleccionada
             const filteredTiposExamen = tiposExamen.filter(tipo => tipo.especialidad_id ==
                 selectedEspecialidad);
-
             $.each(filteredTiposExamen, function(index, tipo) {
                 tipoExamenSelect.append(new Option(tipo.nombre, tipo.id, false,
                     false)); // Agrega la opción
             });
 
             // Actualiza Select2 para mostrar los nuevos elementos
-            tipoExamenSelect.select2();
+            tipoExamenSelect.select2({
+                tags: true, // Permite crear nuevas opciones
+                placeholder: "Selecciona o añade una opción" // Placeholder opcional
+            });
 
             // Selecciona las opciones que están en selectedTipoExamenIds
             tipoExamenSelect.val(selectedTipoExamenIds).trigger('change'); // Selecciona las opciones
