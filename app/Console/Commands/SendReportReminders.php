@@ -73,7 +73,6 @@ class SendReportReminders extends Command
             } else {
                 $email = PersonaLocalModel::find($alert->persona_id)->email;
             }
-            log::info($email);
             if ($email) {
                 Mail::to($email)->send(new ReportReminderMail($alert));
                 $estadoNuevo = new EstadoAlertaModel();

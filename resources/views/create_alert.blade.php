@@ -246,7 +246,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="addTipoExamen" class="form-label">Examen/es:</label>
+                                    <label for="addTipoExamen" class="form-label">Exámen/es:</label>
                                     <select class="form-control" id="addTipoExamen" name="addTipoExamen[]" multiple
                                         required>
 
@@ -330,15 +330,21 @@
                                             <label class="form-check-label" for="siempre">Siempre</label>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="modal-body border-transparent" style="margin-top: -3%">
+                                    <div class="py-2 px-3 text-yellow-500 d-flex align-items-center" role="alert"
+                                        style="border: solid #FBBF24; border-radius: 8px; border-width: 1px; margin-top: -5%">
+                                        <i class="fa-solid fa-circle-info mr-2" style="color: #FBBF24"></i>
+                                        <div>Al completarse esta alerta, se generará un pedido médico firmado
+                                            electrónicamente por usted.</div>
+                                    </div>
                                 </div>
 
 
                             </div>
+
                             <div style="text-align: right;" class="mt-auto">
-                                <p class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 rounded-md">
-                                    <strong>Atención:</strong> Al completarse esta alerta, se generará un pedido médico
-                                    firmado electrónicamente por usted.
-                                </p>
 
                                 <button type="submit" class="btn btn-dark">Agendar alerta</button>
                             </div>

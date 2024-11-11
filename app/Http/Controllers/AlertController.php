@@ -10,6 +10,7 @@ use App\Models\EspecialidadModel;
 use App\Models\EstadoAlertaModel;
 use App\Models\ExamenAlertModel;
 use App\Models\ExamenModel;
+use App\Models\PedidoMedicoModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -115,7 +116,6 @@ class AlertController extends Controller
         $alert->save();
 
         foreach ($request->input('addTipoExamen') as $tipoExamen) {
-            Log::info($request->input('addTipoExamen'));
 
             if (is_numeric($tipoExamen)) {
                 // Asumimos que es un ID de un examen ya existente
@@ -154,7 +154,6 @@ class AlertController extends Controller
     {
         // Obtener los datos de la solicitud
         $personalInfo = $request->input('personalInfo');
-        Log::info($personalInfo);
         $is_in_alephoo = $personalInfo['is_in_alephoo'];
         // Verificar que los datos existan
         if ($personalInfo && $is_in_alephoo) {
@@ -381,7 +380,6 @@ class AlertController extends Controller
         $tipoExamenes = json_decode($request->input('hiddenTipoExamen'), true);
 
         foreach ($tipoExamenes as $tipoExamen) {
-            Log::info($tipoExamen);
 
             if (is_numeric($tipoExamen)) {
                 // Asumimos que es un ID de un examen ya existente
@@ -419,6 +417,7 @@ class AlertController extends Controller
     {
         $alert = AlertModel::find($id);
         $estados = EstadoAlertaModel::where('alerta_id', $id)->get();
+        $pedidosMedicos = PedidoMedicoModel::where('alerta_id',$id)->get();
         $tiposExamenSelected = ExamenAlertModel::with(['alerta', 'tipoExamen'])
             ->where('alert_id', $id)
             ->get();
@@ -431,7 +430,7 @@ class AlertController extends Controller
         }
 
         $especialidades = EspecialidadModel::all();
-        return view('gestion_alert', ['estados' => $estados, 'alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona, 'tiposExamenSelected' => $tiposExamenSelected]);
+        return view('gestion_alert', ['pedidos_medicos'=> $pedidosMedicos, 'estados' => $estados, 'alert' => $alert, 'especialidades' => $especialidades, 'persona' => $persona, 'tiposExamenSelected' => $tiposExamenSelected]);
     }
 
     // TuControlador.php

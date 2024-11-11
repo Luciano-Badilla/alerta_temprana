@@ -1,6 +1,7 @@
 @php
     use App\Models\ExamenModel;
     use App\Models\DatoPersonaModel;
+    use App\Models\PedidoMedicoModel;
     use App\Models\User;
 @endphp
 <!DOCTYPE html>
@@ -87,7 +88,7 @@
                 {{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $paciente->id)->first()->dato ??($paciente->obra_social ?? null) }}
             </p>
             <p><strong>Fecha:</strong>
-                {{ $alert->pedido_medico_created_at ? \Carbon\Carbon::parse($alert->pedido_medico_created_at)->format('d/m/Y') : 'N/A' }}
+                {{ \Carbon\Carbon::parse(PedidoMedicoModel::find($id)->created_at)->format('d/m/Y')}}
             </p>
         </div>
 
@@ -96,9 +97,9 @@
             <div style="margin-left: 20px;">    
                 <h3 style="margin: 0; margin-top:5%;">STO:</h3>
                 <div>
-                    @foreach ($examenes as $examen)
+                    @foreach ($examenesId as $examen)
                         <p style="margin-left: 10px;">
-                            - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}
+                            {{ "- ".ExamenModel::find($examen->examen_id)->nombre }}
                         </p>
                     @endforeach
                 </div>

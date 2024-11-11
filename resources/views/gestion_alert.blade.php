@@ -6,10 +6,63 @@
     use App\Models\EspecialidadModel;
     use App\Models\TipoModel;
     use App\Models\EstadoAlertaModel;
+    use App\Models\ExamenModel;
+    use App\Models\User;
     use Carbon\Carbon;
 @endphp
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+    /* Personaliza la posición del popover */
+    .popover {
+        margin-top: 10px;
+        /* Ajusta este valor para que el popover se vea mejor */
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1000px;
+        /* Ajuste para el formato apaisado */
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .logo {
+        width: 60%;
+        margin-bottom: 10px;
+    }
+
+    .patient-info,
+    .prescription {
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    .patient-info p,
+    .prescription p {
+        margin: 3px 0;
+    }
+
+    .prescription {
+        min-height: 390px;
+        height: auto;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 10px;
+        color: #666;
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+    }
+
     /* Estilos personalizados */
     .custom-scrollbar {
         max-height: auto;
@@ -141,6 +194,97 @@
                         data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" id="postpone_form" class="btn btn-primary"
                         style="border-radius: 8px !important">Ir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="generarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 8px !important">
+                <div class="modal-header border-transparent">
+                    <div class="flex flex-col">
+                        <h5 class="modal-title" id="exampleModalLabel">Generar pedido médico</h5>
+                        <p class="text-muted">Esta acción aplazara la fecha de la alerta.</p>
+                    </div>
+                    <button type="button" class="btn-close text-sm" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div Class="px-2" style="margin-top: -3%;">
+                    <input type="text" name="nombrePedido" id="nombrePedido" class="form-control rounded-lg"
+                        placeholder="Nombre del pedido" required>
+
+                </div>
+                <div class="modal-body border-transparent">
+
+                    <div class="container">
+                        <div class="header flex justify-center">
+                            <img src="{{ asset('storage/images/hu_logo.jpg') }}" alt="Logo UNCuyo" class="logo">
+                        </div>
+
+                        <div class="patient-info">
+                            <p><strong>Paciente:</strong> {{ $persona->apellidos . ' ' . $persona->nombres }}</p>
+                            <p><strong>Documento:</strong> {{ $persona->documento }}</p>
+                            <p><strong>Obra social:</strong>
+                                {{ DatoPersonaModel::where('tipo_dato', 'obra_social')->where('persona_id', $persona->id)->first()->dato ??($persona->obra_social ?? null) }}
+                            </p>
+                            <p><strong>Fecha:</strong>
+                                {{ $alert->pedido_medico_created_at ? \Carbon\Carbon::parse($alert->pedido_medico_created_at)->format('d/m/Y') : \Carbon\Carbon::now()->format('d/m/Y') }}
+
+                            </p>
+                        </div>
+
+                        <div class="prescription">
+                            <h5 style="margin: 0;">Rp/</h5>
+                            <div style="margin-left: 20px;">
+                                <h6 style="margin: 0; margin-top:5%;">STO:</h6>
+                                <div>
+                                    <div class="flex flex-col">
+                                        @foreach ($tiposExamenSelected as $examen)
+                                            <!-- Contenedor para cada elemento con hover en conjunto -->
+                                            <div class="flex items-center hover:bg-gray-200 rounded-xl cursor-pointer transition duration-200 examen-item"
+                                                style="line-height: 1.2;">
+                                                <!-- Nombre del examen -->
+                                                <p class="text-sm flex-1 ml-2 examen-text">
+                                                    - {{ ExamenModel::find($examen->tipo_examen_id)->nombre }}
+                                                </p>
+
+                                                <!-- Ícono -->
+                                                <i class="fa-solid fa-ban text-sm ml-2 mr-1 examen-ban-icon"></i>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                </div>
+                                <h6 style="margin: 0; margin-top:1%;">Diagnóstico:</h6>
+                                <p style="margin-left: 10px;" class="text-sm">{{ $alert->detalle }}</p>
+                            </div>
+                        </div>
+
+                        <div class="footer">
+                            <p>Firmado electrónicamente por
+                                {{ User::find($alert->created_by)->sexo === 'M' ? 'el Dr.' : 'la Dra.' }}
+                                {{ User::find($alert->created_by)->name ?? '' }} - Matrícula:
+                                {{ User::find($alert->created_by)->matricula ?? '' }} - Información confidencial -
+                                Secreto médico -
+                                Alcances del art. 156 del Código Penal. Validado en el sistema HIS-Alephoo según el art.
+                                5 de la Ley
+                                25.506 "Firma Electrónica".
+                                <br> Paso de los Andes 3051 - Ciudad de Mendoza.
+                            </p>
+                            <p>Teléfonos (0261) 4135011 / (0261) 4135021 - info@hospital.uncu.edu.ar -
+                                www.hospital.uncu.edu.ar </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-transparent">
+                    <button type="button" class="btn"
+                        style="border: solid gray; border-radius: 8px; border-width: 1px;"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <a id="generate-pdf-btn"
+                        class="btn btn-success px-3 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors"
+                        style="border-radius: 8px;" data-estado="Completada">
+                        <i class="fa-solid fa-file-pdf mr-1"></i> Generar
+                    </a>
                 </div>
             </div>
         </div>
@@ -321,7 +465,31 @@
                                 class="text-sm text-gray-900 mt-1 p-2 bg-white border border-gray-300 rounded-md w-full resize-none custom-scrollbar"
                                 rows="1" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" id="observaciones">{{ $alert->observacion }}</textarea>
 
+
                         </div>
+                        <div class="form-section bg-gray-50 p-4 rounded-lg">
+
+                            <h2 class="text-xl font-bold mb-4">Pedidos medicos</h2>
+                            @foreach ($pedidos_medicos as $pedido_medico)
+                                <a href="{{ route('ver.pdf', ['pedido_medico_id' => $pedido_medico->id]) }}"
+                                    class="btn btn-success px-2 text-center text-8xl py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-bs-toggle="popover" data-bs-placement="bottom"
+                                    title="{{ $pedido_medico->nombre }}" data-bs-trigger="hover"
+                                    data-estado="Completada">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </a>
+                            @endforeach
+
+
+                            @if ($estados->contains('estado_id', 4))
+                                <button type="button" id="generateButton"
+                                    class="btn btn-success px-2 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#generarModal"><i
+                                        class="fa-solid fa-file-medical"></i>
+                                </button>
+                            @endif
+                        </div>
+
 
                         <!-- Botones -->
                         <div
@@ -358,19 +526,6 @@
                                     <i class="fa-solid fa-check mr-2"></i> Completar
                                 </button>
                             @endif
-                            @if ($estados->contains('estado_id', 4) && !$estados->contains('estado_id', 11))
-                                <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
-                                    class="btn btn-success px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada"><i class="fa-solid fa-file-pdf mr-1"></i>
-                                    Generar pedido medico
-                                </a>
-                            @elseif ($estados->contains('estado_id', 4))
-                                <a href="{{ route('generate.pdf', ['id' => $alert->id]) }}"
-                                    class="btn btn-success px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada"><i class="fa-solid fa-file-pdf mr-1"></i>
-                                    Ver pedido medico
-                                </a>
-                            @endif
                         </div>
                     </div>
                 </form>
@@ -391,7 +546,81 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
+    // Inicializa el array con todos los exámenes no tachados
+    let examenesNoTachados = [];
+
+    // Rellenar el array con todos los exámenes al inicio
+    document.querySelectorAll('.examen-text').forEach((examenText) => {
+        const examenNombre = examenText.textContent.trim();
+        examenesNoTachados.push(examenNombre);
+    });
+
+    // Selecciona todos los íconos de ban y agrega un listener de clic
+    document.querySelectorAll('.examen-ban-icon').forEach((icono) => {
+        icono.addEventListener('click', (event) => {
+            const examenItem = event.target.closest('.examen-item');
+            const examenText = examenItem.querySelector('.examen-text');
+            const examenNombre = examenText.textContent.trim();
+
+            // Marcar el texto como tachado o deshacer el tache
+            examenText.style.textDecoration = examenText.style.textDecoration === 'line-through' ?
+                'none' : 'line-through';
+
+            // Agregar o quitar el examen del array dependiendo de si está tachado
+            if (examenText.style.textDecoration !== 'line-through') {
+                // Si el texto no está tachado, agregarlo al array (si no está ya)
+                if (!examenesNoTachados.includes(examenNombre)) {
+                    examenesNoTachados.push(examenNombre);
+                }
+            } else {
+                // Si el texto está tachado, eliminarlo del array
+                examenesNoTachados = examenesNoTachados.filter(item => item !== examenNombre);
+            }
+
+            // Mostrar el array actualizado en la consola (para depuración)
+            console.log(examenesNoTachados);
+        });
+    });
+
+    // Función para obtener los exámenes no tachados
+    function obtenerExamenesNoTachados() {
+        return examenesNoTachados; // Aquí usamos el array previamente generado
+    }
+
+    // Manejar el clic en el enlace de generación del PDF
+    document.getElementById('generate-pdf-btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Evitar el comportamiento por defecto del enlace
+
+        // Obtener los exámenes no tachados
+        const examenes = obtenerExamenesNoTachados();
+
+        // Obtener el valor de nombrePedido (suponiendo que ya tienes esta variable disponible en tu contexto)
+        const nombrePedido = $('#nombrePedido').val(); // Este valor debería venir de tu entorno de Laravel
+
+        // Construir los parámetros de la URL con los exámenes no tachados y el nombrePedido
+        const url = new URL("{{ route('generate.pdf', ['id' => $alert->id]) }}", window.location.origin);
+
+        // Añadir el nombrePedido a la URL
+        url.searchParams.append('nombrePedido', nombrePedido);
+
+        // Añadir los exámenes a la URL
+        examenes.forEach((examen, index) => {
+            url.searchParams.append(`examenes[${index}]`, examen); // Añadir cada examen como parámetro
+        });
+
+        // Redirigir a la ruta generada con los parámetros
+        window.location.href = url.toString();
+    });
+
+
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Inicializa todos los popovers de la página
+        var popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        var popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(
+            popoverTriggerEl));
+
+
         const textarea = document.getElementById("observaciones");
 
         // Ajusta la altura inicial del textarea
@@ -493,6 +722,8 @@
             Array.from(buttons).forEach(button => {
                 button.setAttribute('disabled', 'true'); // Desactivar todos los botones
             });
+            document.getElementById('generateButton').removeAttribute('disabled');
+
 
             return; // Salir de la función
         }

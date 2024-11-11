@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified', CheckUserAccess::class])->group(function 
 
 
         Route::get('/generate_pdf/{id}', [PDFController::class, 'generate'])->name('generate.pdf');
+        Route::get('/ver_pdf/{pedido_medico_id}', [PDFController::class, 'ver'])->name('ver.pdf');
 
         // Rutas relacionadas a estado
         Route::post('/estado/agregar', [AlertController::class, 'agregarEstado'])->name('estado.agregar');

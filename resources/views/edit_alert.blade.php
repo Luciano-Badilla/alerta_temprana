@@ -265,7 +265,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="editTipoExamen" class="form-label">Examen/es:</label>
+                                    <label for="editTipoExamen" class="form-label">Exámen/es:</label>
                                     <select class="form-control" id="editTipoExamen" name="editTipoExamen[]" multiple
                                         required>
                                     </select>
@@ -287,8 +287,7 @@
                                         <p><strong>Fecha de la alerta:</strong>
                                             {{ ucfirst(\Carbon\Carbon::parse($alert->fecha_objetivo)->locale('es')->translatedFormat('F Y')) }}
                                     </div>
-                                    <p class="alert alert-danger">Al editar la fecha de la alerta se contara desde la
-                                        fecha de creacion.</p>
+
                                     <label for="editFechaAlert" class="form-label">Fecha de la alerta: (dentro
                                         de...)</label>
 
@@ -358,6 +357,15 @@
                                                 id="siempre" value="2">
                                             <label class="form-check-label" for="siempre">Siempre</label>
                                         </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-body border-transparent">
+                                    <div class="py-2 px-3 text-red-600 d-flex align-items-center" role="alert"
+                                        style="border: solid #EF4444; border-radius: 8px; border-width: 1px; margin-top:-5%">
+                                        <i class="fa-solid fa-triangle-exclamation mr-2" style="color:#EF4444"></i>
+                                        <div>Al editar la fecha de la alerta se contará desde la
+                                            fecha de creación.</div>
                                     </div>
                                 </div>
 
