@@ -34,7 +34,13 @@ class PDFController extends Controller
         $estados = EstadoModel::all();
         $especialidades = EspecialidadModel::all();
         $nombre = $request->input('nombrePedido');
+        if (!$nombre) {
+            return redirect()->back()->with('error', 'Debe ingresar un nombre identificable para el pedido.');
+        }
         $examenes = $request->input('examenes');
+        if (!$examenes) {
+            return redirect()->back()->with('error', 'Debe seleccionar al menos un examen.');
+        }
         $examenes = array_map(function ($examen) {
             return trim(str_replace('-', '', $examen));
         }, $examenes);

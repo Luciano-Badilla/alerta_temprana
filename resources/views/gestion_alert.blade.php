@@ -488,6 +488,13 @@
                                         class="fa-solid fa-file-medical"></i>
                                 </button>
                             @endif
+
+                            @if (session('error'))
+                                <div class=" text-red mt-2">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                         </div>
 
 
