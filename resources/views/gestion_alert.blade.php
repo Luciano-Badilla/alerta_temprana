@@ -204,12 +204,12 @@
                 <div class="modal-header border-transparent">
                     <div class="flex flex-col">
                         <h5 class="modal-title" id="exampleModalLabel">Generar pedido médico</h5>
-                        <p class="text-muted">Esta acción aplazara la fecha de la alerta.</p>
                     </div>
                     <button type="button" class="btn-close text-sm" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div Class="px-2" style="margin-top: -3%;">
+                <div Class="px-4" style="margin-top: -3%;">
+                    <label for="nombrePedido">Nombre identificable:</label>
                     <input type="text" name="nombrePedido" id="nombrePedido" class="form-control rounded-lg"
                         placeholder="Nombre del pedido" required>
 
