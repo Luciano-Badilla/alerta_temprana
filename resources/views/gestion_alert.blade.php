@@ -467,73 +467,78 @@
 
 
                         </div>
-                        <div class="form-section bg-gray-50 p-4 rounded-lg">
+                        @if ($estados->contains('estado_id', 4))
+                            <div class="form-section bg-gray-50 p-4 rounded-lg">
 
-                            <h2 class="text-xl font-bold mb-4">Pedidos medicos</h2>
-                            @foreach ($pedidos_medicos as $pedido_medico)
-                                <a href="{{ route('ver.pdf', ['pedido_medico_id' => $pedido_medico->id]) }}"
-                                    class="btn btn-success px-2 text-center text-8xl py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-bs-toggle="popover" data-bs-placement="bottom"
-                                    title="{{ $pedido_medico->nombre }}" data-bs-trigger="hover"
-                                    data-estado="Completada">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </a>
-                            @endforeach
+                                <h2 class="text-xl font-bold mb-4">Pedidos medicos</h2>
+                                @foreach ($pedidos_medicos as $pedido_medico)
+                                    <a href="{{ route('ver.pdf', ['pedido_medico_id' => $pedido_medico->id]) }}"
+                                        class="btn btn-success px-2 text-center text-8xl py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                        data-bs-toggle="popover" data-bs-placement="bottom"
+                                        title="{{ $pedido_medico->nombre }}" data-bs-trigger="hover"
+                                        data-estado="Completada">
+                                        <i class="fa-solid fa-file-pdf"></i>
+                                    </a>
+                                @endforeach
 
 
-                            @if ($estados->contains('estado_id', 4))
+
                                 <button type="button" id="generateButton"
                                     class="btn btn-success px-2 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                                     data-estado="Completada" data-bs-toggle="modal" data-bs-target="#generarModal"><i
                                         class="fa-solid fa-file-medical"></i>
                                 </button>
-                            @endif
 
-                            @if (session('error'))
-                                <div class=" text-red mt-2">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
 
-                        </div>
+                                @if (session('error'))
+                                    <div class=" text-red mt-2">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+
+                            </div>
+                        @endif
 
 
                         <!-- Botones -->
-                        <div
-                            class="buttons_div md:flex-wrap justify-center gap-2 mt-6 whitespace-nowrap text-sm text-center p-3">
-                            @if (!$estados->contains('estado_id', 4))
-                                <button type="button"
-                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                    data-estado="Sin contactar">
-                                    <i class="fa-solid fa-phone-slash mr-2"></i> Sin contactar
-                                </button>
-                                <button type="button"
-                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                    data-estado="Contactado">
-                                    <i class="fa-solid fa-phone-flip mr-2"></i> Contactado
-                                </button>
-                                <button type="button"
-                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                    data-estado="Confirmado">
-                                    <i class="fa-solid fa-calendar-check mr-2"></i> Confirmado
-                                </button>
-                                <button type="button"
-                                    class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
-                                    data-estado="Rechazado">
-                                    <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
-                                </button>
-                                <button type="button"
-                                    class="btn btn-primary px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#postponeModal">
-                                    <i class="fa-solid fa-clock-rotate-left"></i> Posponer
-                                </button>
-                                <button type="button"
-                                    class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
-                                    <i class="fa-solid fa-check mr-2"></i> Completar
-                                </button>
-                            @endif
-                        </div>
+                        @if (Auth::user()->rol_id >= 2 && Auth::user()->rol_id <= 4)
+                            <div
+                                class="buttons_div md:flex-wrap justify-center gap-2 mt-6 whitespace-nowrap text-sm text-center p-3">
+                                @if (!$estados->contains('estado_id', 4))
+                                    <button type="button"
+                                        class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                        data-estado="Sin contactar">
+                                        <i class="fa-solid fa-phone-slash mr-2"></i> Sin contactar
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                        data-estado="Contactado">
+                                        <i class="fa-solid fa-phone-flip mr-2"></i> Contactado
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                        data-estado="Confirmado">
+                                        <i class="fa-solid fa-calendar-check mr-2"></i> Confirmado
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-dark px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+                                        data-estado="Rechazado">
+                                        <i class="fa-solid fa-calendar-xmark mr-2"></i> Rechazado
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-primary px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                        data-estado="Completada" data-bs-toggle="modal"
+                                        data-bs-target="#postponeModal">
+                                        <i class="fa-solid fa-clock-rotate-left"></i> Posponer
+                                    </button>
+                                    <button type="button"
+                                        class="btn btn-success px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                        data-estado="Completada" data-bs-toggle="modal" data-bs-target="#infoModal">
+                                        <i class="fa-solid fa-check mr-2"></i> Completar
+                                    </button>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </form>
             </div>

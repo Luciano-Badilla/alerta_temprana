@@ -13,7 +13,7 @@ use App\Http\Middleware\CheckUserRole;
 
 // Middleware general
 Route::middleware(['auth', 'verified', CheckUserAccess::class])->group(function () {
-    Route::middleware([CheckUserRole::class . ':1,2,3,4'])->group(function () {
+    Route::middleware([CheckUserRole::class . ':1,2,3,4,5'])->group(function () {
         Route::get('', [GestAlertsController::class, 'index'])->name('alerts');
         Route::get('/alerts', [GestAlertsController::class, 'index'])->name('alerts');
     });
@@ -42,6 +42,18 @@ Route::middleware(['auth', 'verified', CheckUserAccess::class])->group(function 
         Route::post('/get-personal-data-local', [AlertController::class, 'getPersonalDataLocalByDNI'])->name('get_data_local');
         Route::post('/get-personal-data-local-empty-inputs', [AlertController::class, 'getPersonalDataLocalEmptyInputsByDNI'])->name('get_data_local_empty_inputs');
     });
+
+    Route::middleware([CheckUserRole::class . ':2,3,4,5'])->group(function () {
+        Route::get('/alerts/gest_alert/{id}', [AlertController::class, 'gest_index'])->name('alert.gest');
+        Route::post('/alerts/gest_alert', [AlertController::class, 'completed'])->name('alert.completed');
+        Route::post('/alerts/gest_alert/observacion', [AlertController::class, 'guardarObservacion'])->name('guardar.observacion');
+    });
+
+
+
+
+    Route::get('/generate_pdf/{id}', [PDFController::class, 'generate'])->name('generate.pdf');
+    Route::get('/ver_pdf/{pedido_medico_id}', [PDFController::class, 'ver'])->name('ver.pdf');
 
     Route::middleware([CheckUserRole::class . ':4'])->group(function () {
         Route::get('/users/users_gest', [GestionUsers::class, 'index'])->name('users.gest');
