@@ -203,14 +203,12 @@
             <div class="modal-content" style="border-radius: 8px !important">
                 <div class="modal-header border-transparent">
                     <div class="flex flex-col">
-                        <h5 class="modal-title" id="exampleModalLabel">Generar pedido médico</h5>
                     </div>
                     <button type="button" class="btn-close text-sm" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
                 <div Class="px-4" style="margin-top: -3%;">
-                    <label for="nombrePedido">Nombre identificable:</label>
-                    <input type="text" name="nombrePedido" id="nombrePedido" class="form-control rounded-lg"
+                    <input type="text" name="nombrePedido" id="nombrePedido" class="form-control rounded-lg mt-2"
                         placeholder="Nombre del pedido" required>
 
                 </div>
@@ -473,7 +471,7 @@
                                 <h2 class="text-xl font-bold mb-4">Pedidos medicos</h2>
                                 @foreach ($pedidos_medicos as $pedido_medico)
                                     <a href="{{ route('ver.pdf', ['pedido_medico_id' => $pedido_medico->id]) }}"
-                                        class="btn btn-success px-2 text-center text-8xl py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+                                        class="btn btn-primary px-2 text-center text-8xl py-2 bg-blue-600 text-white rounded hover:bg-green-700 transition-colors"
                                         data-bs-toggle="popover" data-bs-placement="bottom"
                                         title="{{ $pedido_medico->nombre }}" data-bs-trigger="hover"
                                         data-estado="Completada">
@@ -485,8 +483,7 @@
 
                                 <button type="button" id="generateButton"
                                     class="btn btn-success px-2 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#generarModal"><i
-                                        class="fa-solid fa-file-medical"></i>
+                                    data-estado="Completada" data-bs-toggle="modal" data-bs-target="#generarModal"><i class="fa-solid fa-plus"></i>
                                 </button>
 
 
